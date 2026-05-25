@@ -5,7 +5,7 @@ from typing import Any
 from requests import Session, Response
 
 from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
-from trading_ig.rest_api.endpoint import RestApiCall
+from trading_ig.rest_api.base_rest_api_call import RestApiCall
 from trading_ig.utils import api_limit_hit
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class KycRequiredException(Exception):
     pass
 
 
-class IGSessionCRUD:
+class IGSession:
     """Session with CRUD operation"""
 
     def __init__(self, base_url: str, api_key: str, session: Session):
@@ -49,7 +49,10 @@ class IGSessionCRUD:
             }
         )
 
-    def _get_session(self, session: Session | None = None, version: IGRestAPIVersion | None = None) -> Session:
+    def _get_session(
+        self, session: Session | None = None, 
+        version: IGRestAPIVersion | None = None
+    ) -> Session:
         """Returns a Requests session if session is None
         or session if it's not None (cached session
         with requests-cache for example)
@@ -60,6 +63,9 @@ class IGSessionCRUD:
         if session is None:
             session = self.session 
         else:
+            assert isinstance(session, Session), (
+                f"session must be {type(Session)} not {type(session)}"
+            )
             session = session
         if IGRestAPIVersion is not None:
             session.headers.update({"VERSION": str(version)})
@@ -80,7 +86,7 @@ class IGSessionCRUD:
 
         if response.status_code == 200:
             payload = self.parse_response(response)
-            return rest_api_call.process_response(payload)
+            return rest_api_call.process_payload(payload)
         else:
             self.handle_request_error_code(response)
 

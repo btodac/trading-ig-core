@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType, Direction, OrderType, TimeInForce
-from trading_ig.rest_api.endpoint import Arguments, RestApiCall, RequestData
+from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
 @dataclass

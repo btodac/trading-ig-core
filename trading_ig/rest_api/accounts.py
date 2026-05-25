@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any
 
 from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
-from trading_ig.rest_api.endpoint import Arguments, RestApiCall, RequestData
+from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 from trading_ig.utils import _HAS_PANDAS
 
 if _HAS_PANDAS:

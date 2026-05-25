@@ -15,8 +15,8 @@ requires-python = ">=3.12,<4"
 readme = "README.rst"
 license = "BSD-3-Clause"
 dependencies = [
+    "cryptography",
     "requests>=2.24,<3",
-    "pycryptodome>=3.9,<4",
     "requests-cache>=0.5,<0.6",
     "lightstreamer-client-lib==1.0.3",
 ]
