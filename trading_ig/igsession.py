@@ -81,7 +81,7 @@ class IGSession:
         response: Response = request(self._get_url(rest_api_call.endpoint), data=rest_api_call.data)
         logger.info(f"{rest_api_call.request_type.upper()} '{rest_api_call.endpoint}', resp {response.status_code}")
 
-        if rest_api_call.request_type == RequestType.GET:
+        if rest_api_call.request_type == RequestType.GET:  # TODO: Headers need to be processed here as do OAuth
             self.handle_session_tokens(response, self._get_session(session))
 
         if response.status_code == 200:

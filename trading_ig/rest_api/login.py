@@ -49,7 +49,7 @@ class CreateSessionV1(RestApiCall):
         else:
             raise ValueError("Either both 'encryption_key' and 'encryption_timestamp must be provided or neither")
         """
-        self._manage_headers(response)
+        self._manage_headers(response) -> Headers con
         data = self.parse_response(response.text)
         """
     
