@@ -2,45 +2,12 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, TransactionType
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 from trading_ig.utils import _HAS_PANDAS
 
 if _HAS_PANDAS:
     import pandas as pd
-
-@dataclass
-class SwitchAccountData(RequestData):
-    accountId: str
-    defaultAccount: str
-
-
-class SwitchAccount(RestApiCall):
-        
-    def __init__(self, account_id, default_account):
-        self.base_endpoint = "/session"
-        self.request_type = RequestType.PUT
-        self.api_version = IGRestAPIVersion.ONE
-    
-        self.request_data = SwitchAccountData(
-            accountId=account_id,
-            defaultAccount=default_account,
-        )
-
-
-@dataclass
-class ReadSessionData(RequestData):
-    fetchSessionTokens: bool
-
-
-class ReadSession(RestApiCall):
-
-    def __init__(self, fetch_session_tokens: bool=False):
-        self.base_endpoint = "/session"
-        self.request_type = RequestType.GET
-        self.api_version = IGRestAPIVersion.ONE
-    
-        self.request_data = ReadSessionData(fetchSessionTokens=fetch_session_tokens)
 
 
 class FetchAccounts(RestApiCall):
@@ -159,7 +126,7 @@ class FetchAccountActivity(RestApiCall):
 
 @dataclass
 class FetchTransactionHistoryByTypeAndPeriodArguments(Arguments):
-    trans_type: str
+    trans_type: TransactionType
     milliseconds: int
 
     def as_string(self):
@@ -168,7 +135,7 @@ class FetchTransactionHistoryByTypeAndPeriodArguments(Arguments):
 
 class FetchTransactionHistoryByTypeAndPeriod(RestApiCall):
 
-    def __init__(self, trans_type: str, milliseconds: int):
+    def __init__(self, trans_type: TransactionType, milliseconds: int):
         self.base_endpoint = "/history/transactions"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
@@ -180,7 +147,7 @@ class FetchTransactionHistoryByTypeAndPeriod(RestApiCall):
 
 @dataclass
 class FetchTransactionHistoryData(RequestData):
-    type: str | None = None
+    type: TransactionType | None = None
     from_: str | None = field(default=None, metadata={"json_name": "from"})
     to: str | None = None
     maxSpanSeconds: int | None = None
@@ -192,7 +159,7 @@ class FetchTransactionHistory(RestApiCall):
 
     def __init__(
         self,
-        trans_type: str | None = None,
+        trans_type: TransactionType | None = None,
         from_date: str | None = None,
         to_date: str | None = None,
         max_span_seconds: int | None = None,

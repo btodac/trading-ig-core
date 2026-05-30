@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
@@ -19,7 +19,7 @@ class FetchClientSentimentByInstrument(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchClientSentimentByInstrumentArguments(market_id=market_id)
-        self.request_data = RequestData()
+        
 
     def process_payload(self, payload):
         return _to_sentiment_dict(payload)
@@ -41,7 +41,7 @@ class FetchClientSentimentByInstruments(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchClientSentimentByInstrumentsArguments(market_id=market_ids)
-        self.request_data = RequestData()
+        
 
     def process_payload(self, payload):
         return _to_sentiments_dict(payload)
@@ -62,7 +62,7 @@ class FetchRelatedClientSentimentByInstrument(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchRelatedClientSentimentByInstrumentArguments(market_id=market_id)
-        self.request_data = RequestData()
+        
 
     def process_payload(self, payload):
         return _to_sentiments_dict(payload)

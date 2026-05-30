@@ -5,7 +5,7 @@ by Femto Trader - https://github.com/femtotrader
 """
 
 from .rest import IGService
-from .stream import IGStreamService
+from .stream_handler import IGStreamService
 
 __all__ = [
     "IGService",

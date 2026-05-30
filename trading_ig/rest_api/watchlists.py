@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from typing import Any
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
@@ -11,18 +10,18 @@ class FetchAllWatchlists(RestApiCall):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.request_data = RequestData()
+        
 
 
 @dataclass
 class CreateWatchlistData(RequestData):
     name: str
-    epics: str
+    epics: list[str]
 
 
 class CreateWatchlist(RestApiCall):
 
-    def __init__(self, name: str, epics: str):
+    def __init__(self, name: str, epics: list[str]):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.POST
         self.api_version = IGRestAPIVersion.ONE
@@ -44,7 +43,7 @@ class DeleteWatchlist(RestApiCall):
         self.request_type = RequestType.DELETE
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = DeleteWatchlistArguments(watchlist_id=watchlist_id)
-        self.request_data = RequestData()
+        
 
 
 @dataclass
@@ -62,7 +61,7 @@ class FetchWatchlistMarkets(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchWatchlistMarketsArguments(watchlist_id=watchlist_id)
-        self.request_data = RequestData()
+        
 
 
 @dataclass
@@ -107,4 +106,4 @@ class RemoveMarketFromWatchlist(RestApiCall):
             watchlist_id=watchlist_id,
             epic=epic,
         )
-        self.request_data = RequestData()
+        

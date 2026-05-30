@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, MarketFilter
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
@@ -10,43 +10,45 @@ class FetchTopLevelNavigationNodes(RestApiCall):
         self.base_endpoint = "/marketnavigation"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.request_data = RequestData()
+        
 
 
 @dataclass
-class FetchSubNodesByNodeArguments(Arguments):
-    node: str
-
-    def as_string(self):
-        return f"/{self.node}"
-
-
-class FetchSubNodesByNode(RestApiCall):
-
-    def __init__(self, node: str):
-        self.base_endpoint = "/marketnavigation"
-        self.request_type = RequestType.GET
-        self.api_version = IGRestAPIVersion.ONE
-        self.arguments = FetchSubNodesByNodeArguments(node=node)
-        self.request_data = RequestData()
-
-
-@dataclass
-class FetchMarketByEpicArguments(Arguments):
+class GetMarketDetailsArguments(Arguments):
     epic: str
 
     def as_string(self):
         return f"/{self.epic}"
 
 
-class FetchMarketByEpic(RestApiCall):
+class GetMarketDetails(RestApiCall):
 
     def __init__(self, epic: str):
         self.base_endpoint = "/markets"
         self.request_type = RequestType.GET
+        self.api_version = IGRestAPIVersion.ONE
+        self.arguments = GetMarketDetailsArguments(epic=epic)
+
+
+class GetMarketDetailsV2(GetMarketDetails):
+
+    def __init__(self, epic: str):
+        super().__init__(epic)
+        self.api_version = IGRestAPIVersion.TWO
+
+
+class GetMarketDetailsV3(GetMarketDetails):
+
+    def __init__(self, epic: str):
+        super().__init__(epic)
         self.api_version = IGRestAPIVersion.THREE
-        self.arguments = FetchMarketByEpicArguments(epic=epic)
-        self.request_data = RequestData()
+
+
+class GetMarketDetailsV4(GetMarketDetails):
+
+    def __init__(self, epic: str):
+        super().__init__(epic)
+        self.api_version = IGRestAPIVersion.FOUR      
 
 
 @dataclass
@@ -69,21 +71,22 @@ class FetchMarketsByEpics(RestApiCall):
 
 @dataclass
 class SearchMarketsData(RequestData):
-    searchTerm: str
+    epics: str
 
 
 class SearchMarkets(RestApiCall):
 
-    def __init__(self, search_term: str):
+    def __init__(self, epics: str):
         self.base_endpoint = "/markets"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.request_data = SearchMarketsData(searchTerm=search_term)
+        self.request_data = SearchMarketsData(epics=epics)
 
 
 @dataclass
 class SearchMarketsV2Data(RequestData):
     epics: str
+    filter: MarketFilter | None = None
 
 
 class SearchMarketsV2(RestApiCall):

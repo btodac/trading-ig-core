@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType, Direction, OrderType, TimeInForce
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, Direction, OrderType, TimeInForce
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
@@ -82,7 +82,7 @@ class FetchDealByDealReference(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchDealByDealReferenceArguments(deal_reference=deal_reference)
-        self.request_data = RequestData()
+        
 
 
 @dataclass
@@ -100,7 +100,7 @@ class FetchOpenPositionByDealId(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.TWO
         self.arguments = FetchOpenPositionByDealIdArguments(deal_id=deal_id)
-        self.request_data = RequestData()
+        
 
 
 class FetchOpenPositions(RestApiCall):
@@ -109,7 +109,7 @@ class FetchOpenPositions(RestApiCall):
         self.base_endpoint = "/positions"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.TWO
-        self.request_data = RequestData()
+        
 
 
 class FetchWorkingOrders(RestApiCall):
@@ -118,7 +118,7 @@ class FetchWorkingOrders(RestApiCall):
         self.base_endpoint = "/workingorders"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.TWO
-        self.request_data = RequestData()
+        
 
 
 @dataclass
@@ -168,14 +168,14 @@ class UpdateOpenPosition(RestApiCall):
 @dataclass
 class CreateWorkingOrderData(RequestData):
     currencyCode: str
-    direction: str
+    direction: Direction
     epic: str
     expiry: str
     guaranteedStop: bool
     level: float
     size: float
-    timeInForce: str
-    type: str
+    type: OrderType
+    timeInForce: TimeInForce | None = None
     forceOpen: bool = False
     limitDistance: float | None = None
     limitLevel: float | None = None
@@ -189,44 +189,12 @@ class CreateWorkingOrder(RestApiCall):
 
     def __init__(
         self,
-        currency_code: str,
-        direction: str,
-        epic: str,
-        expiry: str,
-        guaranteed_stop: bool,
-        level: float,
-        size: float,
-        time_in_force: str,
-        order_type: str,
-        limit_distance: float | None = None,
-        limit_level: float | None = None,
-        stop_distance: float | None = None,
-        stop_level: float | None = None,
-        good_till_date: str | None = None,
-        deal_reference: str | None = None,
-        force_open: bool = False,
+        request_data: CreateWorkingOrderData,
     ):
-        self.base_endpoint = "/workingorders/otc"
+        self.base_endpoint = "/working-orders/otc"
         self.request_type = RequestType.POST
         self.api_version = IGRestAPIVersion.TWO
-        self.request_data = CreateWorkingOrderData(
-            currencyCode=currency_code,
-            direction=direction,
-            epic=epic,
-            expiry=expiry,
-            guaranteedStop=guaranteed_stop,
-            level=level,
-            size=size,
-            timeInForce=time_in_force,
-            type=order_type,
-            limitDistance=limit_distance,
-            limitLevel=limit_level,
-            stopDistance=stop_distance,
-            stopLevel=stop_level,
-            goodTillDate=good_till_date,
-            dealReference=deal_reference,
-            forceOpen=force_open,
-        )
+        self.request_data = request_data
 
 
 @dataclass
@@ -240,11 +208,11 @@ class DeleteWorkingOrderArguments(Arguments):
 class DeleteWorkingOrder(RestApiCall):
 
     def __init__(self, deal_id: str):
-        self.base_endpoint = "/workingorders/otc"
+        self.base_endpoint = "/working-orders/otc"
         self.request_type = RequestType.DELETE
         self.api_version = IGRestAPIVersion.TWO
         self.arguments = DeleteWorkingOrderArguments(deal_id=deal_id)
-        self.request_data = RequestData()
+        
 
 
 @dataclass
@@ -256,8 +224,8 @@ class UpdateWorkingOrderData(RequestData):
     stopDistance: float | None = None
     stopLevel: float | None = None
     guaranteedStop: bool = False
-    timeInForce: str | None = None
-    type: str | None = None
+    timeInForce: TimeInForce | None = None
+    type: OrderType | None = None
 
 
 @dataclass
@@ -283,7 +251,7 @@ class UpdateWorkingOrder(RestApiCall):
         time_in_force: str | None = None,
         order_type: str | None = None,
     ):
-        self.base_endpoint = "/workingorders/otc"
+        self.base_endpoint = "/working-orders/otc"
         self.request_type = RequestType.PUT
         self.api_version = IGRestAPIVersion.TWO
         self.arguments = UpdateWorkingOrderArguments(deal_id=deal_id)

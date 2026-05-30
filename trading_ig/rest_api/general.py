@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, ApplicationStatus
 from trading_ig.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 
@@ -17,7 +17,7 @@ class UpdateClientAppData(RequestData):
     allowanceAccountOverall: int
     allowanceAccountTrading: int
     apiKey: str
-    status: str
+    status: ApplicationStatus
 
 
 class UpdateClientApp(RestApiCall):

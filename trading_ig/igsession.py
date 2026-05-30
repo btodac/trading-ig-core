@@ -1,11 +1,14 @@
 import json
 import logging
+from dataclasses import dataclass
 from typing import Any
 
 from requests import Session, Response
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, AccountTypeBaseURL
+from trading_ig.rest_api.login import CreateSessionV2, GetSession, SwitchAccount, Logout, GetEncryptionKey
 from trading_ig.rest_api.base_rest_api_call import RestApiCall
+from trading_ig.stream_handler import IGStreamService
 from trading_ig.utils import api_limit_hit
 
 logger = logging.getLogger(__name__)
@@ -33,60 +36,75 @@ class KycRequiredException(Exception):
     pass
 
 
+@dataclass
+class IGAccountDetails:
+    username: str = "YOUR_USERNAME"
+    password: str = "YOUR_PASSWORD"
+    api_key: str = "YOUR_API_KEY"
+    acc_type: str = AccountTypeBaseURL
+    acc_number: str = "ABC123"
+
 class IGSession:
     """Session with CRUD operation"""
 
-    def __init__(self, base_url: str, api_key: str, session: Session):
-        self.base_url = base_url
-        self.api_key = api_key
-        self.session = session
+    def __init__(self, ig_account_details: IGAccountDetails, encrypt_password: bool = True):
+        self.base_url = str(AccountTypeBaseURL)
+        self._account = ig_account_details
+        self.session = Session()
 
         self.session.headers.update(
             {
-                "X-IG-API-KEY": self.api_key,
+                "X-IG-API-KEY": self._account.api_key,
                 "Content-Type": "application/json",
                 "Accept": "application/json; charset=UTF-8",
             }
         )
+        if encrypt_password:
+            encryption_key, encryption_timestamp = self.request(GetEncryptionKey())
 
-    def _get_session(
-        self, session: Session | None = None, version: IGRestAPIVersion | None = None
-    ) -> Session:
-        """Returns a Requests session if session is None
-        or session if it's not None (cached session
-        with requests-cache for example)
-
-        :param session:
-        :return:
-        """
-        if session is None:
-            session = self.session
+            self.account_details = self.request(CreateSessionV2(
+                username=ig_account_details.username, 
+                password=ig_account_details.password,
+                encryption_key=encryption_key,
+                encryption_timestamp=encryption_timestamp,
+            ))
         else:
-            assert isinstance(session, Session), (
-                f"session must be {type(Session)} not {type(session)}"
-            )
-            session = session
-        if IGRestAPIVersion is not None:
-            session.headers.update({"VERSION": str(version)})
-        return session
+            self.account_details = self.request(CreateSessionV2(
+                username=ig_account_details.username, 
+                password=ig_account_details.password,
+            ))
+
+        self.streamer = IGStreamService(self)
+    
+    def __del__(self):
+        self.streamer.disconnect()
+        self.terminate_session()
+
+    def get_session(self):
+        session_details = self.request(GetSession(fetch_session_tokens=True))
+        self.account_details |= session_details
+        return session_details
+    
+    def terminate_session(self):
+        self.request(Logout())
+
+    def _set_header_version(self, version: IGRestAPIVersion) -> Session:
+        self.session.headers.update({"VERSION": str(version)})
 
     def _get_url(self, endpoint: str) -> str:
         """Returns url from endpoint and base url"""
         return self.base_url + endpoint
 
-    def request(self, rest_api_call: RestApiCall, session: Session | None = None):
-        session = self._get_session(session, rest_api_call.api_version)
-        request = getattr(session, rest_api_call.request_type)
-        response: Response = request(
-            self._get_url(rest_api_call.endpoint), data=rest_api_call.data
-        )
+    def request(self, rest_api_call: RestApiCall):
+        self._set_header_version(rest_api_call.api_version)
+        url = self._get_url(rest_api_call.endpoint)
+        request = getattr(self.session, rest_api_call.request_type)
+        response: Response = request(url, data=rest_api_call.data)
         logger.info(
             f"{rest_api_call.request_type.upper()} '{rest_api_call.endpoint}', resp {response.status_code}"
         )
 
-        # TODO: Headers need to be processed here as do OAuth
-        if rest_api_call.request_type == RequestType.GET:
-            self.handle_session_tokens(response, self._get_session(session))
+        self.handle_session_tokens(response)
 
         if response.status_code == 200:
             payload = self.parse_response(response)
@@ -94,7 +112,7 @@ class IGSession:
         else:
             self.handle_request_error_code(response)
 
-    def handle_session_tokens(self, response: Response, session: Session | None = None):
+    def handle_session_tokens(self, response: Response):
         """
         Copy session tokens from response to headers, so they will be present for all
             future requests
@@ -103,11 +121,10 @@ class IGSession:
         :param session: HTTP session object
         :type session: requests.Session
         """
-        session = self._get_session(session)
         if "CST" in response.headers:
-            session.headers.update({"CST": response.headers["CST"]})
+            self.session.headers.update({"CST": response.headers["CST"]})
         if "X-SECURITY-TOKEN" in response.headers:
-            session.headers.update(
+            self.session.headers.update(
                 {"X-SECURITY-TOKEN": response.headers["X-SECURITY-TOKEN"]}
             )
 

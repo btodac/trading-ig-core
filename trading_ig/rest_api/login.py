@@ -8,7 +8,7 @@ from typing import Any
 from cryptography.hazmat.primitives.serialization import load_der_public_key
 from cryptography.hazmat.primitives.asymmetric import padding
 
-from trading_ig.rest_api.api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
 from trading_ig.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 logger = logging.getLogger(__name__)
@@ -123,16 +123,17 @@ class SwitchAccount(RestApiCall):
 
 
 @dataclass
-class ReadSessionData(RequestData):
+class GetSessionData(RequestData):
     fetchSessionTokens: bool
 
 
-class ReadSession(RestApiCall):
+class GetSession(RestApiCall):
 
     def __init__(self, fetch_session_tokens: bool=False):
         self.base_endpoint = "/session"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
     
-        self.request_data = ReadSessionData(fetchSessionTokens=fetch_session_tokens)
+        self.request_data = GetSessionData(fetchSessionTokens=fetch_session_tokens)
+
 
