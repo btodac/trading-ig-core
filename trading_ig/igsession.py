@@ -6,7 +6,13 @@ from typing import Any
 from requests import Session, Response
 
 from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, AccountTypeBaseURL
-from trading_ig.rest_api.login import CreateSessionV2, GetSession, SwitchAccount, Logout, GetEncryptionKey
+from trading_ig.rest_api.login import (
+    CreateSessionV2,
+    GetSession,
+    SwitchAccount,
+    Logout,
+    GetEncryptionKey,
+)
 from trading_ig.rest_api.base_rest_api_call import RestApiCall
 from trading_ig.stream_handler import IGStreamService
 from trading_ig.utils import api_limit_hit
@@ -44,10 +50,13 @@ class IGAccountDetails:
     acc_type: str = AccountTypeBaseURL
     acc_number: str = "ABC123"
 
+
 class IGSession:
     """Session with CRUD operation"""
 
-    def __init__(self, ig_account_details: IGAccountDetails, encrypt_password: bool = True):
+    def __init__(
+        self, ig_account_details: IGAccountDetails, encrypt_password: bool = True
+    ):
         self.base_url = str(AccountTypeBaseURL)
         self._account = ig_account_details
         self.session = Session()
@@ -62,20 +71,24 @@ class IGSession:
         if encrypt_password:
             encryption_key, encryption_timestamp = self.request(GetEncryptionKey())
 
-            self.account_details = self.request(CreateSessionV2(
-                username=ig_account_details.username, 
-                password=ig_account_details.password,
-                encryption_key=encryption_key,
-                encryption_timestamp=encryption_timestamp,
-            ))
+            self.account_details = self.request(
+                CreateSessionV2(
+                    username=ig_account_details.username,
+                    password=ig_account_details.password,
+                    encryption_key=encryption_key,
+                    encryption_timestamp=encryption_timestamp,
+                )
+            )
         else:
-            self.account_details = self.request(CreateSessionV2(
-                username=ig_account_details.username, 
-                password=ig_account_details.password,
-            ))
+            self.account_details = self.request(
+                CreateSessionV2(
+                    username=ig_account_details.username,
+                    password=ig_account_details.password,
+                )
+            )
 
         self.streamer = IGStreamService(self)
-    
+
     def __del__(self):
         self.streamer.disconnect()
         self.terminate_session()
@@ -84,7 +97,7 @@ class IGSession:
         session_details = self.request(GetSession(fetch_session_tokens=True))
         self.account_details |= session_details
         return session_details
-    
+
     def terminate_session(self):
         self.request(Logout())
 

@@ -1,18 +1,20 @@
 from lightstreamer.client import Subscription
 
 from trading_ig.streaming_api.streaming_enums import (
-    StreamModes, 
-    AccountSubscriptionFields, 
-    PriceSubscriptionFields, 
+    StreamModes,
+    AccountSubscriptionFields,
+    PriceSubscriptionFields,
     TradeSubscriptionFields,
-    ChartSubscriptionsFields, 
+    ChartSubscriptionsFields,
     ConsolidatedChartSubscriptionFields,
     ConsolidatedChartSubscriptionScale,
 )
 
-class PriceSubscription(Subscription):
 
-    def __init__(self, account_id: str, epic: str, fields: list[PriceSubscriptionFields]):
+class PriceSubscription(Subscription):
+    def __init__(
+        self, account_id: str, epic: str, fields: list[PriceSubscriptionFields]
+    ):
         super().__init__(
             mode=StreamModes.DISTINCT,
             items=[f"PRICE:{account_id}:{epic}"],
@@ -22,7 +24,6 @@ class PriceSubscription(Subscription):
 
 
 class AccountSubscription(Subscription):
-
     def __init__(self, account_id: str, fields: list[AccountSubscriptionFields]):
         super().__init__(
             mode=StreamModes.MERGE,
@@ -32,20 +33,18 @@ class AccountSubscription(Subscription):
 
 
 class TradeSubscription(Subscription):
-
     def __init__(self, account_id: str, fields: list[TradeSubscriptionFields]):
         super().__init__(
             mode=StreamModes.DISTINCT,
             items=[f"TRADE:{account_id}"],
             fields=fields,
         )
-        
+
 
 class ConsolidatedChartSubscription(Subscription):
-
     def __init__(
-        self, 
-        epic: str, 
+        self,
+        epic: str,
         scale: ConsolidatedChartSubscriptionScale,
         fields: list[ConsolidatedChartSubscriptionFields],
     ):
@@ -57,7 +56,6 @@ class ConsolidatedChartSubscription(Subscription):
 
 
 class ChartSubscription(Subscription):
-
     def __init__(self, epic: str, fields: list[ChartSubscriptionsFields]):
         super().__init__(
             mode=StreamModes.DISTINCT,

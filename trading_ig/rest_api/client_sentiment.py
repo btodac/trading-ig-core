@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
-from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
+from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall
 
 
 @dataclass
@@ -13,13 +13,11 @@ class FetchClientSentimentByInstrumentArguments(Arguments):
 
 
 class FetchClientSentimentByInstrument(RestApiCall):
-
     def __init__(self, market_id: str):
         self.base_endpoint = "/clientsentiment"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchClientSentimentByInstrumentArguments(market_id=market_id)
-        
 
     def process_payload(self, payload):
         return _to_sentiment_dict(payload)
@@ -35,13 +33,13 @@ class FetchClientSentimentByInstrumentsArguments(Arguments):
 
 
 class FetchClientSentimentByInstruments(RestApiCall):
-
     def __init__(self, market_ids: list[str]):
         self.base_endpoint = "/clientsentiment"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.arguments = FetchClientSentimentByInstrumentsArguments(market_id=market_ids)
-        
+        self.arguments = FetchClientSentimentByInstrumentsArguments(
+            market_id=market_ids
+        )
 
     def process_payload(self, payload):
         return _to_sentiments_dict(payload)
@@ -56,13 +54,13 @@ class FetchRelatedClientSentimentByInstrumentArguments(Arguments):
 
 
 class FetchRelatedClientSentimentByInstrument(RestApiCall):
-
     def __init__(self, market_id: str):
         self.base_endpoint = "/clientsentiment"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.arguments = FetchRelatedClientSentimentByInstrumentArguments(market_id=market_id)
-        
+        self.arguments = FetchRelatedClientSentimentByInstrumentArguments(
+            market_id=market_id
+        )
 
     def process_payload(self, payload):
         return _to_sentiments_dict(payload)
@@ -71,7 +69,7 @@ class FetchRelatedClientSentimentByInstrument(RestApiCall):
 def _to_sentiment_dict(sentiment_json: dict):
     return {
         "long": sentiment_json["longPositionPercentage"],
-        "short": sentiment_json["shortPositionPercentage"]
+        "short": sentiment_json["shortPositionPercentage"],
     }
 
 

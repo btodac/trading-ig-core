@@ -2,7 +2,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, TransactionType
+from trading_ig.rest_api.rest_api_enums import (
+    IGRestAPIVersion,
+    RequestType,
+    TransactionType,
+)
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 from trading_ig.utils import _HAS_PANDAS
 
@@ -11,7 +15,6 @@ if _HAS_PANDAS:
 
 
 class FetchAccounts(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/accounts"
         self.request_type = RequestType.GET
@@ -19,7 +22,6 @@ class FetchAccounts(RestApiCall):
 
 
 class FetchAccountPreferences(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/accounts/preferences"
         self.request_type = RequestType.GET
@@ -32,7 +34,6 @@ class UpdateAccountPreferencesData(RequestData):
 
 
 class UpdateAccountPreferences(RestApiCall):
-
     def __init__(self, trailing_stops_enabled: bool):
         self.base_endpoint = "/accounts/preferences"
         self.request_type = RequestType.PUT
@@ -51,12 +52,13 @@ class FetchAccountActivityByPeriodArguments(Arguments):
 
 
 class FetchAccountActivityByPeriod(RestApiCall):
-
     def __init__(self, milliseconds: int):
         self.base_endpoint = "/history/activity"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.arguments = FetchAccountActivityByPeriodArguments(milliseconds=milliseconds)
+        self.arguments = FetchAccountActivityByPeriodArguments(
+            milliseconds=milliseconds
+        )
 
 
 @dataclass
@@ -69,7 +71,6 @@ class FetchAccountActivityV2Data(RequestData):
 
 
 class FetchAccountActivityV2(RestApiCall):
-
     def __init__(
         self,
         from_date: str | None = None,
@@ -101,7 +102,6 @@ class FetchAccountActivityData(RequestData):
 
 
 class FetchAccountActivity(RestApiCall):
-
     def __init__(
         self,
         from_date: str | None = None,
@@ -134,7 +134,6 @@ class FetchTransactionHistoryByTypeAndPeriodArguments(Arguments):
 
 
 class FetchTransactionHistoryByTypeAndPeriod(RestApiCall):
-
     def __init__(self, trans_type: TransactionType, milliseconds: int):
         self.base_endpoint = "/history/transactions"
         self.request_type = RequestType.GET
@@ -156,7 +155,6 @@ class FetchTransactionHistoryData(RequestData):
 
 
 class FetchTransactionHistory(RestApiCall):
-
     def __init__(
         self,
         trans_type: TransactionType | None = None,
@@ -190,12 +188,14 @@ class FetchAccountActivityByDateArguments(Arguments):
 
 
 class FetchAccountActivityByDate(RestApiCall):
-
-    def __init__(self, fetch_account_acitvity_by_date_arguments: FetchAccountActivityByDateArguments):
+    def __init__(
+        self,
+        fetch_account_acitvity_by_date_arguments: FetchAccountActivityByDateArguments,
+    ):
         self.base_endpoint = "/history/activity"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-    
+
         self.arguments = fetch_account_acitvity_by_date_arguments
 
     def process_payload(self, payload: dict[str, Any]):

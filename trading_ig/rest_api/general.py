@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, ApplicationStatus
+from trading_ig.rest_api.rest_api_enums import (
+    IGRestAPIVersion,
+    RequestType,
+    ApplicationStatus,
+)
 from trading_ig.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 
 class GetClientApps(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/operations/application"
         self.request_type = RequestType.GET
@@ -21,7 +24,6 @@ class UpdateClientAppData(RequestData):
 
 
 class UpdateClientApp(RestApiCall):
-
     def __init__(
         self,
         allowance_account_overall: int,
@@ -41,7 +43,6 @@ class UpdateClientApp(RestApiCall):
 
 
 class DisableClientAppKey(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/operations/application/disable"
         self.request_type = RequestType.PUT

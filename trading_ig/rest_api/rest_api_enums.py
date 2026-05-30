@@ -4,7 +4,7 @@ from enum import IntEnum, StrEnum
 class AccountTypeBaseURL(StrEnum):
     LIVE = "https://api.ig.com/gateway/deal"
     DEMO = "https://demo-api.ig.com/gateway/deal"
-    
+
 
 class IGRestAPIVersion(IntEnum):
     ONE = 1
@@ -34,18 +34,18 @@ class OrderType(StrEnum):
 class TimeInForce(StrEnum):
     EXECUTE_AND_ELIMINATE = "EXECUTE_AND_ELIMINATE"
     FILL_OR_KILL = "FILL_OR_KILL"
-    
+
 
 class TransactionType(StrEnum):
     ALL = "ALL"
     ALL_DEAL = "ALL_DEAL"
     DEPOSIT = "DEPOSIT"
-    WITHDRAWAL = "WITHDRAWAL" 
+    WITHDRAWAL = "WITHDRAWAL"
 
 
 class ApplicationStatus(StrEnum):
-    DISABLED = "DISABLED" 	
-    ENABLED = "ENABLED" 	
+    DISABLED = "DISABLED"
+    ENABLED = "ENABLED"
     REVOKED = "REVOKED"
 
 

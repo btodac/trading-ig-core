@@ -1,7 +1,13 @@
 from dataclasses import dataclass
 from typing import Any
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, Direction, OrderType, TimeInForce
+from trading_ig.rest_api.rest_api_enums import (
+    IGRestAPIVersion,
+    RequestType,
+    Direction,
+    OrderType,
+    TimeInForce,
+)
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
@@ -28,12 +34,11 @@ class CreateOpenPositionData(RequestData):
 
 
 class CreateOpenPosition(RestApiCall):
-    
     def __init__(self, create_open_position_data: CreateOpenPositionData):
         self.base_endpoint = "/positions/otc"
         self.request_type = RequestType.POST
         self.api_version = IGRestAPIVersion.TWO
-    
+
         self.request_data = create_open_position_data
 
     def process_payload(self, payload: dict[str, Any]):
@@ -55,12 +60,11 @@ class CloseOpenPositionData(RequestData):
 
 
 class CloseOpenPosition(RestApiCall):
-    
     def __init__(self, close_open_position_data: CloseOpenPositionData):
         self.base_endpoint = "/positions/otc"
         self.request_type = RequestType.DELETE
         self.api_version = IGRestAPIVersion.ONE
-    
+
         self.request_data = close_open_position_data
 
     def process_payload(self, payload: dict[str, Any]):
@@ -76,13 +80,13 @@ class FetchDealByDealReferenceArguments(Arguments):
 
 
 class FetchDealByDealReference(RestApiCall):
-
     def __init__(self, deal_reference: str):
         self.base_endpoint = "/confirms"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.arguments = FetchDealByDealReferenceArguments(deal_reference=deal_reference)
-        
+        self.arguments = FetchDealByDealReferenceArguments(
+            deal_reference=deal_reference
+        )
 
 
 @dataclass
@@ -94,31 +98,25 @@ class FetchOpenPositionByDealIdArguments(Arguments):
 
 
 class FetchOpenPositionByDealId(RestApiCall):
-
     def __init__(self, deal_id: str):
         self.base_endpoint = "/positions"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.TWO
         self.arguments = FetchOpenPositionByDealIdArguments(deal_id=deal_id)
-        
 
 
 class FetchOpenPositions(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/positions"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.TWO
-        
 
 
 class FetchWorkingOrders(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/workingorders"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.TWO
-        
 
 
 @dataclass
@@ -140,7 +138,6 @@ class UpdateOpenPositionArguments(Arguments):
 
 
 class UpdateOpenPosition(RestApiCall):
-
     def __init__(
         self,
         deal_id: str,
@@ -186,7 +183,6 @@ class CreateWorkingOrderData(RequestData):
 
 
 class CreateWorkingOrder(RestApiCall):
-
     def __init__(
         self,
         request_data: CreateWorkingOrderData,
@@ -206,13 +202,11 @@ class DeleteWorkingOrderArguments(Arguments):
 
 
 class DeleteWorkingOrder(RestApiCall):
-
     def __init__(self, deal_id: str):
         self.base_endpoint = "/working-orders/otc"
         self.request_type = RequestType.DELETE
         self.api_version = IGRestAPIVersion.TWO
         self.arguments = DeleteWorkingOrderArguments(deal_id=deal_id)
-        
 
 
 @dataclass
@@ -237,7 +231,6 @@ class UpdateWorkingOrderArguments(Arguments):
 
 
 class UpdateWorkingOrder(RestApiCall):
-
     def __init__(
         self,
         deal_id: str,
@@ -274,10 +267,8 @@ class FetchRepeatDealingWindowData(RequestData):
 
 
 class FetchRepeatDealingWindow(RestApiCall):
-
     def __init__(self, epic: str | None = None):
         self.base_endpoint = "/repeat-dealing-window"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.request_data = FetchRepeatDealingWindowData(epic=epic)
-    

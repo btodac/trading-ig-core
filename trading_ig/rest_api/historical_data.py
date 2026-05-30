@@ -1,7 +1,12 @@
 from dataclasses import dataclass, field
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType, PriceResolution
+from trading_ig.rest_api.rest_api_enums import (
+    IGRestAPIVersion,
+    RequestType,
+    PriceResolution,
+)
 from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
+
 
 @dataclass
 class FetchHistoricalPricesByEpicArguments(Arguments):
@@ -22,7 +27,6 @@ class FetchHistoricalPricesByEpicData(RequestData):
 
 
 class FetchHistoricalPricesByEpic(RestApiCall):
-
     def __init__(
         self,
         epic: str,
@@ -58,7 +62,6 @@ class FetchHistoricalPricesByEpicAndNumPointsArguments(Arguments):
 
 
 class FetchHistoricalPricesByEpicAndNumPoints(RestApiCall):
-
     def __init__(self, epic: str, resolution: PriceResolution, numpoints: int):
         self.base_endpoint = "/prices"
         self.request_type = RequestType.GET
@@ -68,7 +71,6 @@ class FetchHistoricalPricesByEpicAndNumPoints(RestApiCall):
             resolution=resolution,
             numpoints=numpoints,
         )
-        
 
 
 @dataclass
@@ -87,7 +89,6 @@ class FetchHistoricalPricesByEpicAndDateRangeV1Arguments(Arguments):
 
 
 class FetchHistoricalPricesByEpicAndDateRangeV1(RestApiCall):
-
     def __init__(
         self,
         epic: str,
@@ -120,7 +121,6 @@ class FetchHistoricalPricesByEpicAndDateRangeV2Arguments(Arguments):
 
 
 class FetchHistoricalPricesByEpicAndDateRangeV2(RestApiCall):
-
     def __init__(
         self,
         epic: str,
@@ -137,4 +137,3 @@ class FetchHistoricalPricesByEpicAndDateRangeV2(RestApiCall):
             start_date=start_date,
             end_date=end_date,
         )
-        

@@ -5,12 +5,10 @@ from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, Reque
 
 
 class FetchAllWatchlists(RestApiCall):
-
     def __init__(self):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        
 
 
 @dataclass
@@ -20,7 +18,6 @@ class CreateWatchlistData(RequestData):
 
 
 class CreateWatchlist(RestApiCall):
-
     def __init__(self, name: str, epics: list[str]):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.POST
@@ -37,13 +34,11 @@ class DeleteWatchlistArguments(Arguments):
 
 
 class DeleteWatchlist(RestApiCall):
-
     def __init__(self, watchlist_id: str):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.DELETE
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = DeleteWatchlistArguments(watchlist_id=watchlist_id)
-        
 
 
 @dataclass
@@ -55,13 +50,11 @@ class FetchWatchlistMarketsArguments(Arguments):
 
 
 class FetchWatchlistMarkets(RestApiCall):
-
     def __init__(self, watchlist_id: str):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchWatchlistMarketsArguments(watchlist_id=watchlist_id)
-        
 
 
 @dataclass
@@ -78,7 +71,6 @@ class AddMarketToWatchlistArguments(Arguments):
 
 
 class AddMarketToWatchlist(RestApiCall):
-
     def __init__(self, watchlist_id: str, epic: str):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.PUT
@@ -97,7 +89,6 @@ class RemoveMarketFromWatchlistArguments(Arguments):
 
 
 class RemoveMarketFromWatchlist(RestApiCall):
-
     def __init__(self, watchlist_id: str, epic: str):
         self.base_endpoint = "/watchlists"
         self.request_type = RequestType.DELETE
@@ -106,4 +97,3 @@ class RemoveMarketFromWatchlist(RestApiCall):
             watchlist_id=watchlist_id,
             epic=epic,
         )
-        

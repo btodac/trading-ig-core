@@ -4,34 +4,32 @@ from typing import Any
 
 from trading_ig.rest_api.rest_api_enums import RequestType, IGRestAPIVersion
 
-class Arguments(ABC):
 
+class Arguments(ABC):
     @abstractmethod
     def as_string(self) -> str:
         pass
 
 
 class RequestData(ABC):
-
     def to_json(self):
         json_data = {k: v for k, v in vars(self).items() if v is not None}
         for f in fields(self):
             if "json_name" in f.metadata and f.name in json_data:
                 json_data[f.metadata["json_name"]] = json_data.pop(f.name)
-        
-        return  json_data
+
+        return json_data
 
 
 @dataclass
 class RestApiCall:
-
     base_endpoint: str
     request_type: RequestType
     api_version: IGRestAPIVersion
-    
+
     arguments: Arguments | None = None
     request_data: RequestData | None = None
-    
+
     @property
     def endpoint(self):
         endpoint = self.base_endpoint
@@ -44,6 +42,6 @@ class RestApiCall:
         if self.request_data is None:
             return {}
         return self.request_data.to_json()
-    
-    def process_payload(self, payload: dict[str,Any]):
+
+    def process_payload(self, payload: dict[str, Any]):
         return payload

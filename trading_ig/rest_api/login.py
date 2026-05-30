@@ -13,6 +13,7 @@ from trading_ig.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 logger = logging.getLogger(__name__)
 
+
 class GetEncryptionKey(RestApiCall):
     def __init__(self):
         self.base_endpoint = "/session/encryptionKey"
@@ -110,12 +111,11 @@ class SwitchAccountData(RequestData):
 
 
 class SwitchAccount(RestApiCall):
-        
     def __init__(self, account_id, default_account):
         self.base_endpoint = "/session"
         self.request_type = RequestType.PUT
         self.api_version = IGRestAPIVersion.ONE
-    
+
         self.request_data = SwitchAccountData(
             accountId=account_id,
             defaultAccount=default_account,
@@ -128,12 +128,9 @@ class GetSessionData(RequestData):
 
 
 class GetSession(RestApiCall):
-
-    def __init__(self, fetch_session_tokens: bool=False):
+    def __init__(self, fetch_session_tokens: bool = False):
         self.base_endpoint = "/session"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-    
+
         self.request_data = GetSessionData(fetchSessionTokens=fetch_session_tokens)
-
-
