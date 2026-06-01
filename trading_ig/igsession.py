@@ -47,7 +47,7 @@ class IGAccountDetails:
     username: str = "YOUR_USERNAME"
     password: str = "YOUR_PASSWORD"
     api_key: str = "YOUR_API_KEY"
-    acc_type: str = AccountType.DEMO
+    acc_type: AccountType = AccountType.DEMO
     acc_number: str = "ABC123"
 
 
