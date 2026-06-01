@@ -1,9 +1,15 @@
 from enum import IntEnum, StrEnum
 
 
-class AccountTypeBaseURL(StrEnum):
-    LIVE = "https://api.ig.com/gateway/deal"
-    DEMO = "https://demo-api.ig.com/gateway/deal"
+class AccountType(StrEnum):
+    LIVE = "LIVE" 
+    DEMO = "DEMO"
+
+
+ACCOUNT_TYPE_URL = {
+    AccountType.LIVE: "https://api.ig.com/gateway/deal",
+    AccountType.DEMO: "https://demo-api.ig.com/gateway/deal",
+}
 
 
 class IGRestAPIVersion(IntEnum):

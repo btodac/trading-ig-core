@@ -5,7 +5,7 @@ from typing import Any
 
 from requests import Session, Response
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, AccountTypeBaseURL
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, AccountType, ACCOUNT_TYPE_URL
 from trading_ig.rest_api.login import (
     CreateSessionV2,
     GetSession,
@@ -47,7 +47,7 @@ class IGAccountDetails:
     username: str = "YOUR_USERNAME"
     password: str = "YOUR_PASSWORD"
     api_key: str = "YOUR_API_KEY"
-    acc_type: str = AccountTypeBaseURL
+    acc_type: str = AccountType.DEMO
     acc_number: str = "ABC123"
 
 
@@ -57,7 +57,7 @@ class IGSession:
     def __init__(
         self, ig_account_details: IGAccountDetails, encrypt_password: bool = True
     ):
-        self.base_url = str(AccountTypeBaseURL)
+        self.base_url = ACCOUNT_TYPE_URL[ig_account_details.acc_type]
         self._account = ig_account_details
         self.session = Session()
 
