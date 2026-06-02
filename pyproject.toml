@@ -18,6 +18,7 @@ dependencies = [
     "cryptography",
     "requests>=2.24,<3",
     "lightstreamer-client-lib>=1.0.3",
+    "pydantic",
 ]
 
 [project.optional-dependencies]

@@ -42,6 +42,10 @@ class KycRequiredException(Exception):
     pass
 
 
+class IGInputError(ValueError):
+    pass
+
+
 @dataclass
 class IGAccountDetails:
     username: str = "YOUR_USERNAME"
