@@ -13,6 +13,12 @@ from trading_ig.rest_api.login import (
     Logout,
     GetEncryptionKey,
 )
+from trading_ig.rest_api.responses.login import (
+    SessionCreateV1Response,
+    SessionDetailsResponse,
+    SwitchAccountResponse,
+    GetEncryptionKeyResponse,
+)
 from trading_ig.rest_api.base_rest_api_call import RestApiCall
 from trading_ig.stream_handler import IGStreamService
 from trading_ig.utils import api_limit_hit
@@ -73,18 +79,18 @@ class IGSession:
             }
         )
         if encrypt_password:
-            encryption_key, encryption_timestamp = self.request(GetEncryptionKey())
+            encryption_data: GetEncryptionKeyResponse = self.request(GetEncryptionKey())
 
-            self.account_details = self.request(
+            self.account_details: SessionCreateV1Response = self.request(
                 CreateSessionV2(
                     username=ig_account_details.username,
                     password=ig_account_details.password,
-                    encryption_key=encryption_key,
-                    encryption_timestamp=encryption_timestamp,
+                    encryption_key=encryption_data.encryption_key,
+                    encryption_timestamp=encryption_data.encryption_timestamp,
                 )
             )
         else:
-            self.account_details = self.request(
+            self.account_details: SessionCreateV1Response  = self.request(
                 CreateSessionV2(
                     username=ig_account_details.username,
                     password=ig_account_details.password,
@@ -98,8 +104,8 @@ class IGSession:
         self.terminate_session()
 
     def get_session(self):
-        session_details = self.request(GetSession(fetch_session_tokens=True))
-        self.account_details |= session_details
+        session_details: SessionDetailsResponse = self.request(GetSession(fetch_session_tokens=True))
+        # self.account_details |= session_details
         return session_details
 
     def terminate_session(self):
@@ -112,7 +118,7 @@ class IGSession:
         """Returns url from endpoint and base url"""
         return self.base_url + endpoint
 
-    def request(self, rest_api_call: RestApiCall):
+    def request(self, rest_api_call: RestApiCall) -> Response:
         self._set_header_version(rest_api_call.api_version)
         url = self._get_url(rest_api_call.endpoint)
         request = getattr(self.session, rest_api_call.request_type)

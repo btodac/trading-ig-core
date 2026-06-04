@@ -21,8 +21,12 @@ class RequestData(ABC):
         return json_data
 
 
+class Response(ABC):
+    pass
+
+
 @dataclass
-class RestApiCall:
+class RestApiCall(ABC):
     base_endpoint: str
     request_type: RequestType
     api_version: IGRestAPIVersion
@@ -43,5 +47,6 @@ class RestApiCall:
             return {}
         return self.request_data.to_json()
 
-    def process_payload(self, payload: dict[str, Any]):
-        return payload
+    @abstractmethod
+    def process_payload(self, payload: dict[str, Any]) -> Response:
+        pass

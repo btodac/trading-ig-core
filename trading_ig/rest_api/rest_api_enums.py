@@ -76,3 +76,16 @@ class PriceResolution(StrEnum):
 class MarketFilter(StrEnum):
     ALL = "ALL"
     SNAPSHOT_ONLY = "SNAPSHOT_ONLY"
+
+
+class AccountType(StrEnum):
+    CFD = "CFD"
+    PHYSICAL = "PHYSICAL"
+    SPREADBET = "SPREADBET"
+
+
+class ReroutingEnvironment(StrEnum):
+    DEMO = "DEMO"
+    LIVE = "LIVE"
+    TEST = "TEST"
+    UAT = "UAT"

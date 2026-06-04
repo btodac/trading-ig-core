@@ -9,6 +9,7 @@ from cryptography.hazmat.primitives.serialization import load_der_public_key
 from cryptography.hazmat.primitives.asymmetric import padding
 
 from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
+from trading_ig.rest_api.responses.login import SessionCreateV1Response, SessionCreateV3Response, SessionDetailsResponse, SwitchAccountResponse, GetEncryptionKeyResponse
 from trading_ig.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 logger = logging.getLogger(__name__)
@@ -21,11 +22,17 @@ class GetEncryptionKey(RestApiCall):
         self.api_version = IGRestAPIVersion.ONE
 
     def process_payload(self, payload: dict[str, Any]):
-        return payload["encryptionKey"], payload["timeStamp"]
+        return GetEncryptionKeyResponse(**payload)
 
 
 @dataclass
 class CreateSessionData(RequestData):
+    identifier: str
+    password: str
+
+
+@dataclass
+class CreateSessionDataV1(CreateSessionData):
     identifier: str
     password: str
     encryptedPassword: bool = False
@@ -44,7 +51,7 @@ class CreateSessionV1(RestApiCall):
         self.api_version = IGRestAPIVersion.ONE
 
         if (encryption_key is None) and (encryption_timestamp is None):
-            self.request_data = CreateSessionData(
+            self.request_data = CreateSessionDataV1(
                 identifier=username,
                 password=password,
                 encryptedPassword=False,
@@ -53,7 +60,7 @@ class CreateSessionV1(RestApiCall):
             encrypted_password = self.encrypt_password(
                 password, encryption_key, encryption_timestamp
             )
-            self.request_data = CreateSessionData(
+            self.request_data = CreateSessionDataV1(
                 identifier=username,
                 password=encrypted_password,
                 encryptedPassword=True,
@@ -70,6 +77,9 @@ class CreateSessionV1(RestApiCall):
         message = b64encode(string.encode())
         encrypted_bytes = public_key.encrypt(message, padding.PKCS1v15())
         return b64encode(encrypted_bytes).decode()
+    
+    def process_payload(self, payload: dict):
+        return SessionCreateV1Response(**payload)
 
 
 class CreateSessionV2(CreateSessionV1):
@@ -82,6 +92,22 @@ class CreateSessionV2(CreateSessionV1):
     ):
         super().__init__(username, password, encryption_key, encryption_timestamp)
         self.api_version = IGRestAPIVersion.TWO
+
+
+class CreateSessionV3(RestApiCall):
+    def __init__(
+        self,
+        username: str,
+        password: str,
+    ):
+        self.base_endpoint = "/session"
+        self.request_type = RequestType.POST
+        self.api_version = IGRestAPIVersion.THREE
+
+        self.request_data = CreateSessionData(identifier=username, password=password)
+
+    def process_payload(self, payload: dict):
+        return SessionCreateV3Response(**payload)
 
 
 @dataclass
@@ -121,6 +147,9 @@ class SwitchAccount(RestApiCall):
             defaultAccount=default_account,
         )
 
+    def process_payload(self, payload: dict):
+        return SwitchAccountResponse(**payload)
+
 
 @dataclass
 class GetSessionData(RequestData):
@@ -134,3 +163,6 @@ class GetSession(RestApiCall):
         self.api_version = IGRestAPIVersion.ONE
 
         self.request_data = GetSessionData(fetchSessionTokens=fetch_session_tokens)
+
+    def process_payload(self, payload: dict):
+        return SessionDetailsResponse(**payload)

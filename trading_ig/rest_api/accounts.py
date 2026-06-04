@@ -76,7 +76,7 @@ class FetchAccountActivityV2(RestApiCall):
         from_date: str | None = None,
         to_date: str | None = None,
         max_span_seconds: int | None = None,
-        page_size: int = 20,
+        page_size: int | None = None,
         page_number: int | None = None,
     ):
         self.base_endpoint = "/history/activity/"
