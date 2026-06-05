@@ -176,6 +176,31 @@ class ChartSubscriptionsFields(StrEnum):
     DAY_LOW = "DAY_LOW"  # Daily low price (MID)
 
 
+class PositionStatus(StrEnum):
+    AMENDED = "AMENDED"
+    DELETED = "DELETED"
+    FULLY_CLOSED = "FULLY_CLOSED"
+    OPENED = "OPENED"
+    PARTIALLY_CLOSED = "PARTIALLY_CLOSED"
+    CLOSED = "CLOSED"
+
+
+class DealStatus(StrEnum):
+    ACCEPTED = "ACCEPTED"
+    REJECTED = "REJECTED"
+
+
+class OpenPositionStatus(StrEnum):
+    OPEN = "OPEN"
+    UPDATED = "UPDATED"
+    DELETED = "DELETED"
+
+
+class TimeInForce(StrEnum):
+    GOOD_TILL_CANCELLED = "GOOD_TILL_CANCELLED"
+    GOOD_TILL_DATE = "GOOD_TILL_DATE"
+    
+
 # DEPRECATED
 class MarketFields(StrEnum):
     MID_OPEN = "MID_OPEN"  # Opening mid price

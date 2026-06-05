@@ -11,6 +11,10 @@ from trading_ig.streaming_api.streaming_enums import (
 )
 
 
+class SubscriptionError(Exception):
+    pass
+
+
 class PriceSubscription(Subscription):
     def __init__(
         self, account_id: str, epic: str, fields: list[PriceSubscriptionFields]

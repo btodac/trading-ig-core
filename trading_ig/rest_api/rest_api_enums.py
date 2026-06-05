@@ -35,6 +35,7 @@ class OrderType(StrEnum):
     MARKET = "MARKET"
     LIMIT = "LIMIT"
     QUOTE = "QUOTE"
+    STOP = "STOP"
 
 
 class TimeInForce(StrEnum):
