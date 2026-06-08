@@ -69,6 +69,11 @@ class IGSession:
     ):
         self.base_url = ACCOUNT_TYPE_URL[ig_account_details.acc_type]
         self._account = ig_account_details
+        self.username = ig_account_details.username
+        self.api_key = ig_account_details.api_key
+        self.acc_type = ig_account_details.acc_type
+        self.acc_number = ig_account_details.acc_number
+
         self.session = Session()
 
         self.session.headers.update(

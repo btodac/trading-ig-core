@@ -47,15 +47,16 @@ class CreateOpenPosition(RestApiCall):
 
 @dataclass
 class CloseOpenPositionData(RequestData):
-    dealId: str
+    dealId: str | None  # MUST SET EPIC + EXPIRY IF NONE
     direction: Direction
-    epic: str
-    expiry: str
     size: float
 
-    level: float | None = None
+    epic: str | None = None
+    expiry: str | None = None
+
     orderType: OrderType = OrderType.MARKET
-    quoteId: str | None = None
+    level: float | None = None  # Do not set if orderType = MARKET
+    quoteId: str | None = None  # Do not set if orderType = MARKET
     timeInForce: TimeInForce | None = None
 
 

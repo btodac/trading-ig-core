@@ -5,7 +5,7 @@ from trading_ig.streaming_api.streaming_enums import PositionStatus, DealStatus,
 
 
 @dataclass
-class AfffectedDealStatus:
+class AffectedDealStatus:
     dealId: str
     status: PositionStatus
 
@@ -26,7 +26,7 @@ class TradeUpdateConfirms:
     direction: Direction  # Constant BUY, SELL
     limitLevel: float  # Number Limit level
     dealId: str  # String Deal identifier
-    affectedDeals: list[AfffectedDealStatus]
+    affectedDeals: list[AffectedDealStatus]
     stopLevel: float  # Stop level
     expiry: str  # Instrument expiry
     size: float  # Trade size
@@ -85,8 +85,8 @@ class TradeUpdateWOU:
     channel: str  # String User channel (do not bind to this value - it will be converted to a constant enum)
 
 
-TRADE_UPDATES = {
-    TradeSubscriptionFields.CONFIRMS: TradeUpdateConfirms,
-    TradeSubscriptionFields.OPU: TradeUpdateOPU,
-    TradeSubscriptionFields.WOU: TradeUpdateWOU,
-}
+@dataclass
+class TradeUpdate:
+    CONFIRMS: TradeUpdateConfirms | None = None
+    OPU: TradeUpdateOPU | None = None
+    WOU: TradeUpdateWOU | None = None
