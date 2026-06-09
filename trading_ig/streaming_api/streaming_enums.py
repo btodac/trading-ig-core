@@ -110,7 +110,6 @@ class DLGFlag(StrEnum):
 
 
 class AccountSubscriptionFields(StrEnum):
-    PNL = "PNL"  # Account profit and loss value
     DEPOSIT = "DEPOSIT"  # Account minimum deposit value required for margins
     AVAILABLE_CASH = "AVAILABLE_CASH"  # Amount cash available to trade value, after account balance, profit and loss and minimum deposit amount have been considered
     PNL = "PNL"  # Profit/Loss

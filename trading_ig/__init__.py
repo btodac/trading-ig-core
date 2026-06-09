@@ -1,13 +1,6 @@
-"""
-IG Markets API Library for Python
-https://github.com/ig-python/trading-ig/
-by Femto Trader - https://github.com/femtotrader
-"""
 
-from .rest import IGService
-from .stream_handler import IGStreamService
+from .igsession import IGSession
 
 __all__ = [
-    "IGService",
-    "IGStreamService",
+    "IGSession",
 ]

@@ -5,7 +5,7 @@ from typing import Any
 
 from requests import Session, Response
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, AccountType, ACCOUNT_TYPE_URL
+from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, Gateway
 from trading_ig.rest_api.login import (
     CreateSessionV2,
     GetSession,
@@ -57,7 +57,7 @@ class IGAccountDetails:
     username: str = "YOUR_USERNAME"
     password: str = "YOUR_PASSWORD"
     api_key: str = "YOUR_API_KEY"
-    acc_type: AccountType = AccountType.DEMO
+    acc_type: Gateway = Gateway.DEMO
     acc_number: str = "ABC123"
 
 
@@ -67,7 +67,7 @@ class IGSession:
     def __init__(
         self, ig_account_details: IGAccountDetails, encrypt_password: bool = True
     ):
-        self.base_url = ACCOUNT_TYPE_URL[ig_account_details.acc_type]
+        self.base_url = ig_account_details.acc_type.url
         self._account = ig_account_details
         self.username = ig_account_details.username
         self.api_key = ig_account_details.api_key
@@ -102,7 +102,12 @@ class IGSession:
                 )
             )
 
-        self.streamer = IGStreamService(self)
+        session_details = self.request(GetSession(fetch_session_tokens=False))    
+        cst = self.session.headers["CST"]
+        xsecuritytoken = self.session.headers["X-SECURITY-TOKEN"]
+        ls_password = f"CST-{cst}|XST-{xsecuritytoken}"
+
+        self.streamer = IGStreamService(session_details, ls_password)
 
     def __del__(self):
         self.streamer.disconnect()

@@ -1,15 +1,18 @@
 from enum import IntEnum, StrEnum
 
 
-class AccountType(StrEnum):
+class Gateway(StrEnum):
     LIVE = "LIVE" 
     DEMO = "DEMO"
-
-
-ACCOUNT_TYPE_URL = {
-    AccountType.LIVE: "https://api.ig.com/gateway/deal",
-    AccountType.DEMO: "https://demo-api.ig.com/gateway/deal",
-}
+    
+    @property
+    def url(self):
+        match self.value:
+            case Gateway.LIVE:
+                url = "https://api.ig.com/gateway/deal"
+            case Gateway.DEMO:
+                url = "https://demo-api.ig.com/gateway/deal"
+        return url
 
 
 class IGRestAPIVersion(IntEnum):
