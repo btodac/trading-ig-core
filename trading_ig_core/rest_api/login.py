@@ -8,9 +8,9 @@ from typing import Any
 from cryptography.hazmat.primitives.serialization import load_der_public_key
 from cryptography.hazmat.primitives.asymmetric import padding
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
-from trading_ig.rest_api.responses.login import SessionCreateV1Response, SessionCreateV3Response, SessionDetailsResponse, SwitchAccountResponse, GetEncryptionKeyResponse
-from trading_ig.rest_api.base_rest_api_call import RestApiCall, RequestData
+from trading_ig_core.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
+from trading_ig_core.rest_api.responses.login import SessionCreateV1Response, SessionCreateV3Response, SessionDetailsResponse, SwitchAccountResponse, GetEncryptionKeyResponse
+from trading_ig_core.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 logger = logging.getLogger(__name__)
 

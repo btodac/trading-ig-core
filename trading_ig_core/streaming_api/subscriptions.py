@@ -1,6 +1,6 @@
 from lightstreamer.client import Subscription
 
-from trading_ig.streaming_api.streaming_enums import (
+from trading_ig_core.streaming_api.streaming_enums import (
     StreamModes,
     AccountSubscriptionFields,
     PriceSubscriptionFields,

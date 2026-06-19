@@ -2,13 +2,13 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from trading_ig.rest_api.rest_api_enums import (
+from trading_ig_core.rest_api.rest_api_enums import (
     IGRestAPIVersion,
     RequestType,
     TransactionType,
 )
-from trading_ig.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
-from trading_ig.utils import _HAS_PANDAS
+from trading_ig_core.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
+from trading_ig_core.utils import _HAS_PANDAS
 
 if _HAS_PANDAS:
     import pandas as pd

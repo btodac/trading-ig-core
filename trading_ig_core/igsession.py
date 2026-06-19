@@ -3,25 +3,25 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
+from lightstreamer.client import LightstreamerClient
 from requests import Session, Response
 
-from trading_ig.rest_api.rest_api_enums import IGRestAPIVersion, Gateway
-from trading_ig.rest_api.login import (
+from trading_ig_core.rest_api.rest_api_enums import IGRestAPIVersion, Gateway
+from trading_ig_core.rest_api.login import (
     CreateSessionV2,
     GetSession,
     SwitchAccount,
     Logout,
     GetEncryptionKey,
 )
-from trading_ig.rest_api.responses.login import (
+from trading_ig_core.rest_api.responses.login import (
     SessionCreateV1Response,
     SessionDetailsResponse,
     SwitchAccountResponse,
     GetEncryptionKeyResponse,
 )
-from trading_ig.rest_api.base_rest_api_call import RestApiCall
-from trading_ig.stream_handler import IGStreamService
-from trading_ig.utils import api_limit_hit
+from trading_ig_core.rest_api.base_rest_api_call import RestApiCall
+from trading_ig_core.utils import api_limit_hit
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +59,28 @@ class IGAccountDetails:
     api_key: str = "YOUR_API_KEY"
     acc_type: Gateway = Gateway.DEMO
     acc_number: str = "ABC123"
+
+
+class IGStreamService(LightstreamerClient):
+    def __init__(self, session_details: SessionDetailsResponse, ls_password: str):
+        # Establishing a new connection to Lightstreamer Server
+        logger.info("Starting connection with %s", session_details["lightstreamerEndpoint"])
+
+        super.__init__(session_details["lightstreamerEndpoint"])
+        self.connectionDetails.setUser(session_details["accountId"])
+        self.connectionDetails.setPassword(ls_password)
+
+    def __del__(self):
+        self.disconnect()
+        super().__del__()
+
+    def unsubscribe_all(self):
+        for sub in self.getSubscriptions():
+            self.unsubscribe(sub)
+
+    def disconnect(self):
+        self.unsubscribe_all()
+        super().disconnect()
 
 
 class IGSession:
