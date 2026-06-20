@@ -3,7 +3,7 @@ requires = ["uv_build>=0.11.6,<0.12.0"]
 build-backend = "uv_build"
 
 [project]
-name = "trading-ig-core"
+name = "trading_ig_core"
 version = "0.0.01"
 description = "A lightweight Python wrapper for the IG Markets API"
 authors = [

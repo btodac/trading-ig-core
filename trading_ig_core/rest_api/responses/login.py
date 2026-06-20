@@ -43,7 +43,7 @@ class SessionCreateV1Response(Response):
     hasActiveDemoAccounts: bool  # Whether the Client has active demo accounts
     hasActiveLiveAccounts: bool  # Whether the Client has active live accounts
     lightstreamerEndpoint: str  # Lightstreamer endpoint for subscribing to account and price updates
-    reroutingEnvironment: ReroutingEnvironment  # DEMO, LIVE, TEST, or UAT
+    reroutingEnvironment: ReroutingEnvironment | None  # DEMO, LIVE, TEST, or UAT
     timezoneOffset: float  # Client account timezone offset relative to UTC, expressed in hours
     trailingStopsEnabled: bool  # Whether the account is allowed to set trailing stops on trades
 

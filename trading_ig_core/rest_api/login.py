@@ -129,6 +129,9 @@ class Logout(RestApiCall):
         self.request_type = RequestType.DELETE
         self.api_version = IGRestAPIVersion.ONE
 
+    def process_payload(self, payload):
+        return super().process_payload(payload)
+
 
 @dataclass
 class SwitchAccountData(RequestData):

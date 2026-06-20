@@ -60,14 +60,23 @@ class IGAccountDetails:
     acc_type: Gateway = Gateway.DEMO
     acc_number: str = "ABC123"
 
+    def __post_init__(self):
+        if not isinstance(self.acc_type, Gateway):
+            if self.acc_type in Gateway:
+                self.acc_type = Gateway(self.acc_type)
+            else:
+                raise ValueError(
+                    f"The value of acc_type, {self.acc_type} is not a valid Gateway value")
+
+
 
 class IGStreamService(LightstreamerClient):
     def __init__(self, session_details: SessionDetailsResponse, ls_password: str):
         # Establishing a new connection to Lightstreamer Server
-        logger.info("Starting connection with %s", session_details["lightstreamerEndpoint"])
+        logger.info("Starting connection with %s", session_details.lightstreamerEndpoint)
 
-        super.__init__(session_details["lightstreamerEndpoint"])
-        self.connectionDetails.setUser(session_details["accountId"])
+        super().__init__(session_details.lightstreamerEndpoint, None)
+        self.connectionDetails.setUser(session_details.accountId)
         self.connectionDetails.setPassword(ls_password)
 
     def __del__(self):
@@ -112,8 +121,8 @@ class IGSession:
                 CreateSessionV2(
                     username=ig_account_details.username,
                     password=ig_account_details.password,
-                    encryption_key=encryption_data.encryption_key,
-                    encryption_timestamp=encryption_data.encryption_timestamp,
+                    encryption_key=encryption_data.encryptionKey,
+                    encryption_timestamp=encryption_data.timeStamp,
                 )
             )
         else:
@@ -154,7 +163,7 @@ class IGSession:
         self._set_header_version(rest_api_call.api_version)
         url = self._get_url(rest_api_call.endpoint)
         request = getattr(self.session, rest_api_call.request_type)
-        response: Response = request(url, data=rest_api_call.data)
+        response: Response = request(url, data=json.dumps(rest_api_call.data))
         logger.info(
             f"{rest_api_call.request_type.upper()} '{rest_api_call.endpoint}', resp {response.status_code}"
         )
