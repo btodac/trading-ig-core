@@ -1,6 +1,7 @@
+from enum import StrEnum
 from typing import Any
 
-from pydantic.dataclasses import dataclass
+from pydantic.dataclasses import dataclass, Field
 
 from trading_ig_core.rest_api.rest_api_enums import (
     IGRestAPIVersion,
@@ -89,8 +90,6 @@ class SearchMarketsV2(RestApiCall):
         self.request_data = SearchMarketsV2Data(epics=epics)
 
 
-from enum import StrEnum
-
 class DealingRulesUnits(StrEnum):
     PERCENTAGE = "PERCENTAGE" 	
     POINTS = "POINTS" 	
@@ -159,7 +158,7 @@ class InstrumentUnit(StrEnum):
 
 @dataclass
 class InstrumentDetails:
-    chartCode: str  # Chart code
+    chartCode: str | None # Chart code
     contractSize: str  # Contract size
     country: str  # Country
     currencies: list[Currency]
@@ -173,9 +172,9 @@ class InstrumentDetails:
     streamingPricesAvailable: bool  # True if streaming prices are available, i.e. the market is open and the client has appropriate permissions
     limitAllowed: bool  # True if streaming is allowed
     stopAllowed: bool  # True if stops is allowed
-    type_: InstrumentType
     unit: InstrumentUnit  # Unit used to qualify the size of a trade
-    valueOfOnePip: str  # Value of one pip 
+    valueOfOnePip: str  # Value of one pip
+    type_: InstrumentType = Field(alias="type")
 
 
 class MarketStatus(StrEnum):

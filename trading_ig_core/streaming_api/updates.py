@@ -42,24 +42,25 @@ class TradeUpdateConfirms:
 @dataclass
 class TradeUpdateOPU:
     """Openposition updates for an account"""
-    direction: Direction  # Constant BUY, SELL
-    limitLevel: float  # Number Limit level
-    dealId: str  # String Deal identifier
-    dealIdOrigin: str  # String Deal identifier of the originating deal
-    stopLevel: float  # Number Stop level
-    expiry: str  # String Instrument expiry
-    timestamp: str  # Date Event date and time
-    size: float  # Number Trade size
-    status: OpenPositionStatus 	
-    epic: str  # String Instrument EPIC identifier
-    level: float  # Number Trade level
-    guaranteedStop: bool  # Boolean True if a guaranteed stop is in place
     dealReference: str  # String Deal reference
+    dealId: str  # String Deal identifier
+    direction: Direction  # Constant BUY, SELL
+    epic: str  # String Instrument EPIC identifier
+    status: OpenPositionStatus
     dealStatus: DealStatus
-    channel: str  # String User channel (do not bind to this value - it will be converted to a constant enum)
+    level: float  # Number Trade level
+    size: float  # Number Trade size
     currency: str  # String Currency
-    trailingStopDistance: float  # Number Trailing stop distance
-    trailingStep: float  # Number Trailing stop increment
+    timestamp: str  # Date Event date and time
+    channel: str  # String User channel (do not bind to this value - it will be converted to a constant enum)
+    dealIdOrigin: str  # String Deal identifier of the originating deal    
+    expiry: str  # String Instrument expiry
+    openLevel: float
+    stopLevel: float  # Number Stop level
+    limitLevel: float  # Number Limit level
+    guaranteedStop: bool  # Boolean True if a guaranteed stop is in place
+    trailingStopDistance: float | None = None  # Number Trailing stop distance
+    trailingStep: float | None = None  # Number Trailing stop increment
 
 
 @dataclass

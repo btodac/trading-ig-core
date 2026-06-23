@@ -20,11 +20,11 @@ class PriceSubscription(Subscription):
         self, account_id: str, epic: str, fields: list[PriceSubscriptionFields]
     ):
         super().__init__(
-            mode=StreamModes.DISTINCT,
+            mode=StreamModes.MERGE,
             items=[f"PRICE:{account_id}:{epic}"],
             fields=fields,
         )
-        self.setDataAdapter("Pricing")
+        super().setDataAdapter("Pricing")
 
 
 class AccountSubscription(Subscription):

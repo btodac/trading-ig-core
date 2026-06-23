@@ -79,6 +79,11 @@ class IGStreamService(LightstreamerClient):
         self.connectionDetails.setUser(session_details.accountId)
         self.connectionDetails.setPassword(ls_password)
 
+        try:
+            self.connect()
+        except Exception:
+            logger.error("Unable to connect to Lightstreamer Server")
+
     def __del__(self):
         self.disconnect()
         super().__del__()
