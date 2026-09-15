@@ -28,6 +28,11 @@ dev = [
     "pytest",
 ]
 
+[tool.pytest.ini_options]
+log_cli = true
+pythonpath = ["."]
+testpaths = ["tests",]
+
 [tool.uv.build-backend]
 module-name = "trading_ig_core"
 module-root = ""
