@@ -2,7 +2,7 @@ import json
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 from lightstreamer.client import LightstreamerClient
 from requests import Session, Response
@@ -178,7 +178,11 @@ class IGSession:
         """Returns url from endpoint and base url"""
         return self.base_url + endpoint
 
-    def request(self, rest_api_call: RestApiCall) -> Response:
+    def request(
+        self,
+        rest_api_call: RestApiCall,
+        return_raw: bool = False,
+    ) -> Response:
         self._set_header_version(rest_api_call.api_version)
         url = self._get_url(rest_api_call.endpoint)
         if (
@@ -199,6 +203,8 @@ class IGSession:
         self.handle_session_tokens(response)
 
         if response.status_code == 200:
+            if return_raw:
+                return response
             payload = self.parse_response(response)
             return rest_api_call.process_payload(payload)
         if response.status_code == 204:
