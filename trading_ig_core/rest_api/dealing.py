@@ -3,16 +3,19 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
+from trading_ig_core.rest_api.base_rest_api_call import (
+    Arguments,
+    RequestData,
+    RestApiCall,
+)
 from trading_ig_core.rest_api.responses.dealing import DealConfirmation
 from trading_ig_core.rest_api.rest_api_enums import (
-    IGRestAPIVersion,
-    RequestType,
     Direction,
+    IGRestAPIVersion,
     OrderType,
+    RequestType,
     TimeInForce,
 )
-from trading_ig_core.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
-
 
 logger = logging.getLogger(__name__)
 

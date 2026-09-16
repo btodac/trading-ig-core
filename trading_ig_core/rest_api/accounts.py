@@ -4,13 +4,17 @@ from typing import Any
 
 import pandas as pd
 
-from trading_ig_core.rest_api.rest_api_enums import (
+from trading_ig_core.rest_api import (
+    Accounts,
     IGRestAPIVersion,
     RequestType,
     TransactionType,
 )
-from trading_ig_core.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
-from trading_ig_core.rest_api.responses.accounts import Accounts
+from trading_ig_core.rest_api.base_rest_api_call import (
+    Arguments,
+    RequestData,
+    RestApiCall,
+)
 
 
 class FetchAccounts(RestApiCall):

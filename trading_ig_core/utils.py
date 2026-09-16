@@ -1,23 +1,8 @@
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
 
-import os
 import logging
-import traceback
-import six
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
-
-OPT_URL = "https://trading-ig.readthedocs.io/en/latest/faq.html#optional-dependencies"
-
-try:
-    import pandas
-except ImportError:
-    _HAS_PANDAS = False
-    logger.warning(f"pandas is not present in the environment. See {OPT_URL}")
-else:
-    _HAS_PANDAS = True
 
 
 def api_limit_hit(response_text: str):

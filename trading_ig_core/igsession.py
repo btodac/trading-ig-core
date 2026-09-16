@@ -2,24 +2,24 @@ import json
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 from lightstreamer.client import LightstreamerClient
-from requests import Session, Response
+from requests import Response, Session
 
-from trading_ig_core.rest_api.rest_api_enums import IGRestAPIVersion, Gateway, RequestType
-from trading_ig_core.rest_api.login import (
+from trading_ig_core.rest_api import (
     CreateSessionV2,
-    GetSession,
-    SwitchAccount,
-    Logout,
+    Gateway,
     GetEncryptionKey,
-)
-from trading_ig_core.rest_api.responses.login import (
+    GetEncryptionKeyResponse,
+    GetSession,
+    IGRestAPIVersion,
+    Logout,
+    RequestType,
     SessionCreateV1Response,
     SessionDetailsResponse,
+    SwitchAccount,
     SwitchAccountResponse,
-    GetEncryptionKeyResponse,
 )
 from trading_ig_core.rest_api.base_rest_api_call import RestApiCall
 from trading_ig_core.utils import api_limit_hit
@@ -30,27 +30,24 @@ logger = logging.getLogger(__name__)
 class ApiExceededException(Exception):
     """Raised when our code hits the IG endpoint too often"""
 
-    pass
-
 
 class TokenInvalidException(ConnectionError):
     """Raised when the session token is invalid or expired"""
-
-    pass
-
+    
 
 class IGException(Exception):
-    pass
-
+    """Generic IG exception"""
 
 class KycRequiredException(Exception):
     """Raised when IG needs the user to confirm or re-confirm their KYC status"""
 
-    pass
-
 
 class IGInputError(ValueError):
-    pass
+    """Bad data passed to IG REST API"""
+
+
+class IGRequestError(Exception):
+    """Possibly unused"""
 
 
 @dataclass
@@ -59,7 +56,7 @@ class IGAccountDetails:
     password: str = "YOUR_PASSWORD"
     api_key: str = "YOUR_API_KEY"
     acc_type: Gateway = Gateway.DEMO
-    acc_number: str = "ABC123"
+    acc_number: str = "YOUR_ACCOUNT_NUMBER"
 
     def __post_init__(self):
         if not isinstance(self.acc_type, Gateway):
@@ -68,7 +65,6 @@ class IGAccountDetails:
             else:
                 raise ValueError(
                     f"The value of acc_type, {self.acc_type} is not a valid Gateway value")
-
 
 
 class IGStreamService(LightstreamerClient):
@@ -82,7 +78,7 @@ class IGStreamService(LightstreamerClient):
 
         try:
             self.connect()
-        except Exception as e:
+        except IGException as e:
             logger.error("Unable to connect to Lightstreamer Server: %s", str(e))
         else:
             i = 0
@@ -160,12 +156,11 @@ class IGSession:
         self.streamer.disconnect()
         try:
             self.terminate_session()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 Catch all exceptions and log them
             logger.debug(str(e))
 
     def get_session(self):
         session_details: SessionDetailsResponse = self.request(GetSession(fetch_session_tokens=True))
-        # self.account_details |= session_details
         return session_details
 
     def terminate_session(self):
@@ -182,7 +177,7 @@ class IGSession:
         self,
         rest_api_call: RestApiCall,
         return_raw: bool = False,
-    ) -> Response:
+    ):
         self._set_header_version(rest_api_call.api_version)
         url = self._get_url(rest_api_call.endpoint)
         if (
@@ -203,9 +198,9 @@ class IGSession:
         self.handle_session_tokens(response)
 
         if response.status_code == 200:
-            if return_raw:
-                return response
             payload = self.parse_response(response)
+            if return_raw:
+                return payload
             return rest_api_call.process_payload(payload)
         if response.status_code == 204:
             return
@@ -234,7 +229,7 @@ class IGSession:
         exception raised when error occurs"""
         payload = json.loads(response.text)
         if "errorCode" in payload:
-            raise Exception(payload["errorCode"])
+            raise IGRequestError(payload["errorCode"])
         return payload
 
     def handle_request_error_code(self, response: Response):
@@ -246,8 +241,8 @@ class IGSession:
                     raise ApiExceededException()
                 if "error.public-api.failure.kyc.required" in response.text:
                     raise KycRequiredException(
-                        "KYC issue: you need to login manually to the web interface and "
-                        "complete IGs occasional Know Your Customer checks"
+                        "You need to login manually to the web interface and "
+                        "complete IGs occasional Know Your Customer (KYC) checks"
                     )
             case _:
                 response_str = f"{response.status_code}, {response.reason}, {response.text}"

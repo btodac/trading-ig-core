@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
+from trading_ig_core.rest_api.base_rest_api_call import RequestData, RestApiCall
 from trading_ig_core.rest_api.rest_api_enums import (
+    ApplicationStatus,
     IGRestAPIVersion,
     RequestType,
-    ApplicationStatus,
 )
-from trading_ig_core.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 
 class GetClientApps(RestApiCall):

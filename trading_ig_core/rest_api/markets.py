@@ -1,14 +1,18 @@
 from enum import StrEnum
 from typing import Any
 
-from pydantic.dataclasses import dataclass, Field
+from pydantic.dataclasses import Field, dataclass
 
+from trading_ig_core.rest_api.base_rest_api_call import (
+    Arguments,
+    RequestData,
+    RestApiCall,
+)
 from trading_ig_core.rest_api.rest_api_enums import (
     IGRestAPIVersion,
-    RequestType,
     MarketFilter,
+    RequestType,
 )
-from trading_ig_core.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
 class FetchTopLevelNavigationNodes(RestApiCall):
@@ -230,3 +234,4 @@ class GetMarketDetailsV4(GetMarketDetails):
 
     def process_payload(self, payload: dict[str, Any]):
         return MarketDetailsV4(**payload)
+    

@@ -1,11 +1,15 @@
 from dataclasses import dataclass, field
 
+from trading_ig_core.rest_api.base_rest_api_call import (
+    Arguments,
+    RequestData,
+    RestApiCall,
+)
 from trading_ig_core.rest_api.rest_api_enums import (
     IGRestAPIVersion,
-    RequestType,
     PriceResolution,
+    RequestType,
 )
-from trading_ig_core.rest_api.base_rest_api_call import Arguments, RestApiCall, RequestData
 
 
 @dataclass

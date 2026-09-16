@@ -1,21 +1,38 @@
+import logging
+
 from lightstreamer.client import Subscription
 
 from trading_ig_core.streaming_api.streaming_enums import (
-    StreamModes,
     AccountSubscriptionFields,
-    PriceSubscriptionFields,
-    TradeSubscriptionFields,
     ChartSubscriptionsFields,
     ConsolidatedChartSubscriptionFields,
     ConsolidatedChartSubscriptionScale,
+    PriceSubscriptionFields,
+    StreamModes,
+    TradeSubscriptionFields,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class SubscriptionError(Exception):
-    pass
+    """Raised when a subscription fails"""
 
 
-class PriceSubscription(Subscription):
+class IGBaseSubscription(Subscription):
+
+    def onSubscription(self):
+        logger.debug(f"{self.__class__}: Subscribed successfully")
+
+    def onSubscriptionError(self, code, message):
+        logger.debug(f"{self.__class__}: SubscriptionError: '{code}' {message}")
+        raise SubscriptionError(f"'{code}' {message}")
+
+    def onUnsubscription(self):
+        logger.debug(f"{self.__class__}: Unsubscribed")
+
+
+class PriceSubscription(IGBaseSubscription):
     def __init__(
         self, account_id: str, epic: str, fields: list[PriceSubscriptionFields]
     ):
@@ -27,7 +44,7 @@ class PriceSubscription(Subscription):
         super().setDataAdapter("Pricing")
 
 
-class AccountSubscription(Subscription):
+class AccountSubscription(IGBaseSubscription):
     def __init__(self, account_id: str, fields: list[AccountSubscriptionFields]):
         super().__init__(
             mode=StreamModes.MERGE,
@@ -36,7 +53,7 @@ class AccountSubscription(Subscription):
         )
 
 
-class TradeSubscription(Subscription):
+class TradeSubscription(IGBaseSubscription):
     def __init__(self, account_id: str, fields: list[TradeSubscriptionFields]):
         super().__init__(
             mode=StreamModes.DISTINCT,
@@ -45,7 +62,7 @@ class TradeSubscription(Subscription):
         )
 
 
-class ConsolidatedChartSubscription(Subscription):
+class ConsolidatedChartSubscription(IGBaseSubscription):
     def __init__(
         self,
         epic: str,
@@ -59,7 +76,7 @@ class ConsolidatedChartSubscription(Subscription):
         )
 
 
-class ChartSubscription(Subscription):
+class ChartSubscription(IGBaseSubscription):
     def __init__(self, epic: str, fields: list[ChartSubscriptionsFields]):
         super().__init__(
             mode=StreamModes.DISTINCT,

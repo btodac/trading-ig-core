@@ -1,16 +1,22 @@
 """These are special methods connected to the session rather than used to get/put/post data by the user"""
 
 import logging
-from base64 import b64encode, b64decode
+from base64 import b64decode, b64encode
 from dataclasses import dataclass
 from typing import Any
 
-from cryptography.hazmat.primitives.serialization import load_der_public_key
 from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.serialization import load_der_public_key
 
+from trading_ig_core.rest_api.base_rest_api_call import RequestData, RestApiCall
+from trading_ig_core.rest_api.responses.login import (
+    GetEncryptionKeyResponse,
+    SessionCreateV1Response,
+    SessionCreateV3Response,
+    SessionDetailsResponse,
+    SwitchAccountResponse,
+)
 from trading_ig_core.rest_api.rest_api_enums import IGRestAPIVersion, RequestType
-from trading_ig_core.rest_api.responses.login import SessionCreateV1Response, SessionCreateV3Response, SessionDetailsResponse, SwitchAccountResponse, GetEncryptionKeyResponse
-from trading_ig_core.rest_api.base_rest_api_call import RestApiCall, RequestData
 
 logger = logging.getLogger(__name__)
 
