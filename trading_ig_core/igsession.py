@@ -7,6 +7,7 @@ from typing import Any
 from lightstreamer.client import LightstreamerClient
 from requests import Response, Session
 
+from trading_ig_core.call_limiter import RESTCallLimiter
 from trading_ig_core.rest_api import (
     CreateSessionV2,
     Gateway,
@@ -110,12 +111,7 @@ class IGSession:
     def __init__(
         self, ig_account_details: IGAccountDetails, encrypt_password: bool = True
     ):
-        self.base_url = ig_account_details.acc_type.url
         self._account = ig_account_details
-        self.username = ig_account_details.username
-        self.api_key = ig_account_details.api_key
-        self.acc_type = ig_account_details.acc_type
-        self.acc_number = ig_account_details.acc_number
 
         self.session = Session()
 
@@ -171,8 +167,9 @@ class IGSession:
 
     def _get_url(self, endpoint: str) -> str:
         """Returns url from endpoint and base url"""
-        return self.base_url + endpoint
+        return self._account.acc_type.url + endpoint
 
+    @RESTCallLimiter
     def request(
         self,
         rest_api_call: RestApiCall,
@@ -180,6 +177,7 @@ class IGSession:
     ):
         self._set_header_version(rest_api_call.api_version)
         url = self._get_url(rest_api_call.endpoint)
+
         if (
             rest_api_call.request_type == RequestType.DELETE
             and rest_api_call.request_data is not None
@@ -189,6 +187,7 @@ class IGSession:
             request = getattr(self.session, RequestType.POST)
         else:
             request = getattr(self.session, rest_api_call.request_type)
+
         response: Response = request(url, data=json.dumps(rest_api_call.data))
         self.session.headers.pop("_method", None)
         logger.info(
