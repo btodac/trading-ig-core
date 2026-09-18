@@ -1,0 +1,33 @@
+name: Python package
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  checks:
+
+    runs-on: ubuntu-slim
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
+      with:
+        version: 0.12.15
+        enable-cache: true
+        
+    - name: Setup python
+      run: uv python install
+      
+    - name: Install dependencies
+      run: uv sync --locked --group dev
+      
+    - name: Lint with Ruff
+      run: uv run ruff check
+      
+    - name: Test with pytest
+      run: uv run pytest

@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+
 class StreamModes(StrEnum):
     MERGE = "MERGE"
     DISTINCT = "DISTINCT"
@@ -121,7 +122,7 @@ class AccountSubscriptionFields(StrEnum):
     MARGIN_NLR = "MARGIN_NLR"  # Margin Non-limited Risk
     AVAILABLE_TO_DEAL = "AVAILABLE_TO_DEAL"  # Available to Trade
     EQUITY = "EQUITY"  # Equity
-    EQUITY_USED = "EQUITY_USED"  # 
+    EQUITY_USED = "EQUITY_USED"  # Equity in use
 
 
 class TradeSubscriptionFields(StrEnum):

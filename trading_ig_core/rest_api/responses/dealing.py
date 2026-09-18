@@ -1,4 +1,5 @@
 from pydantic.dataclasses import dataclass
+
 from trading_ig_core.rest_api.rest_api_enums import Direction, RejectionReasons
 from trading_ig_core.streaming_api.updates import (
     AffectedDealStatus,

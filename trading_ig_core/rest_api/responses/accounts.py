@@ -1,4 +1,5 @@
 from pydantic.dataclasses import dataclass
+
 from trading_ig_core.rest_api.rest_api_enums import AccountStatus, AccountType
 
 
