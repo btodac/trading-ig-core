@@ -50,7 +50,7 @@ class CreateOpenPosition(RestApiCall):
 
         self.request_data = create_open_position_data
 
-    def process_payload(self, payload: dict[str, Any]):
+    def process_payload(self, payload: dict[str, Any]) -> str:
         return payload["dealReference"]
 
 
@@ -78,7 +78,7 @@ class CloseOpenPosition(RestApiCall):
 
         self.request_data = close_open_position_data
 
-    def process_payload(self, payload: dict[str, Any]):
+    def process_payload(self, payload: dict[str, Any]) -> str:
         return payload["dealReference"]
 
 
@@ -99,7 +99,7 @@ class FetchDealByDealReference(RestApiCall):
             deal_reference=deal_reference
         )
 
-    def process_payload(self, payload):
+    def process_payload(self, payload) -> DealConfirmation:
         logger.debug(str(payload))
         return DealConfirmation(**payload)
 
