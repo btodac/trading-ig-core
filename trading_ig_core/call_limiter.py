@@ -29,13 +29,13 @@ class RESTCallLimiter:
 
     def __call__(self,
             rest_api_call: RestApiCall,
-            *args,
+            return_raw: bool,
         ):
             endpoint = rest_api_call.base_endpoint.split('/',2)[1]
             limit_type = _limit_map.get(endpoint, "non-trading")
             limit_deque = self._call_times[limit_type]
             self._wait(limit_deque)
-            return self._func(rest_api_call, *args)
+            return self._func(rest_api_call, return_raw)
 
     def _wait(self, limit_deque: deque[dt.datetime]):
         new_dt = dt.datetime.now(tz=dt.UTC)
