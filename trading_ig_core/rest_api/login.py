@@ -1,4 +1,5 @@
-"""These are special methods connected to the session rather than used to get/put/post data by the user"""
+"""These are special methods connected to the session rather than used to get/put/post data by the 
+user"""
 
 import logging
 from base64 import b64decode, b64encode
@@ -73,7 +74,8 @@ class CreateSessionV1(RestApiCall):
             )
         else:
             raise ValueError(
-                "Either both 'encryption_key' and 'encryption_timestamp' must be provided or neither"
+                "Either both 'encryption_key' and 'encryption_timestamp' must be provided or "
+                "neither"
             )
 
     def encrypt_password(self, password: str, key: str, timestamp: str):

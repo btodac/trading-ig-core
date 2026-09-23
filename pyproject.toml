@@ -36,3 +36,26 @@ testpaths = ["tests",]
 [tool.uv.build-backend]
 module-name = "trading_ig_core"
 module-root = ""
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".github",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+]
+line-length = 100
+indent-width = 4
+
+[tool.ruff.lint]
+ignore = []
+fixable = ["ALL"]
+extend-select = ["B","E","F","I","Q"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

@@ -12,6 +12,10 @@ class Arguments(ABC):
 
 
 class RequestData(ABC):
+    @abstractmethod
+    def __init__(self, *args, **kwargs):
+        pass
+
     def to_json(self):
         json_data = {k: v for k, v in vars(self).items() if v is not None}
         for f in fields(self):
@@ -22,7 +26,9 @@ class RequestData(ABC):
 
 
 class Response(ABC):
-    pass
+    @abstractmethod
+    def __init__(self, *args, **kwargs):
+        pass
 
 
 @dataclass

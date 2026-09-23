@@ -33,4 +33,4 @@ class Accounts:
 
     @classmethod
     def from_response(cls, response: list[str]):
-        return cls(response['accounts'])
+        return cls(response["accounts"])

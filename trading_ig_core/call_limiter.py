@@ -31,7 +31,7 @@ class RESTCallLimiter:
             rest_api_call: RestApiCall,
             return_raw: bool,
         ):
-            endpoint = rest_api_call.base_endpoint.split('/',2)[1]
+            endpoint = rest_api_call.base_endpoint.split("/", 2)[1]
             limit_type = _limit_map.get(endpoint, "non-trading")
             limit_deque = self._call_times[limit_type]
             self._wait(limit_deque)

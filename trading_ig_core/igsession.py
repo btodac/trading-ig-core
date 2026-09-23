@@ -156,7 +156,9 @@ class IGSession:
             logger.debug(str(e))
 
     def get_session(self):
-        session_details: SessionDetailsResponse = self.request(GetSession(fetch_session_tokens=True))
+        session_details: SessionDetailsResponse = self.request(
+            GetSession(fetch_session_tokens=True)
+        )
         return session_details
 
     def terminate_session(self):
@@ -191,7 +193,8 @@ class IGSession:
         response: Response = request(url, data=json.dumps(rest_api_call.data))
         self.session.headers.pop("_method", None)
         logger.info(
-            f"{rest_api_call.request_type.upper()} '{rest_api_call.endpoint}', resp {response.status_code}"
+            f"{rest_api_call.request_type.upper()} '{rest_api_call.endpoint}', "
+            f"resp {response.status_code}"
         )
 
         self.handle_session_tokens(response)

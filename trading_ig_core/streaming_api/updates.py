@@ -57,7 +57,8 @@ class TradeUpdateOPU:
     size: float  # Number Trade size
     currency: str  # String Currency
     timestamp: str  # Date Event date and time
-    channel: str  # String User channel (do not bind to this value - it will be converted to a constant enum)
+    # String User channel (do not bind to this value - it will be converted to a constant enum)
+    channel: str  
     dealIdOrigin: str  # String Deal identifier of the originating deal    
     expiry: str  # String Instrument expiry
     openLevel: float
@@ -88,7 +89,8 @@ class TradeUpdateWOU:
     orderType: OrderType  # LiMIT or STOP
     timeInForce: TimeInForce
     goodTillDate: str  # Date Good until specified date
-    channel: str  # String User channel (do not bind to this value - it will be converted to a constant enum)
+    # String User channel (do not bind to this value - it will be converted to a constant enum)
+    channel: str  
 
 
 @dataclass

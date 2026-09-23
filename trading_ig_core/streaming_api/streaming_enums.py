@@ -40,7 +40,8 @@ class PriceSubscriptionFields:
     CURRENCY3 = "CURRENCY3"  # Currency for the ladder fields prefixed C3
     CURRENCY4 = "CURRENCY4"  # Currency for the ladder fields prefixed C4
     CURRENCY5 = "CURRENCY5"  # Currency for the ladder fields prefixed C5
-    # This is only guaranteed to be populated if there is a ladder, ie one or more ASKSIZE1-5 and BIDSIZE1-5 is populated
+    # This is only guaranteed to be populated if there is a ladder, ie one or more ASKSIZE1-5 
+    # and BIDSIZE1-5 is populated
     C1BIDSIZE1 = "C1BIDSIZE1"  # The bid trading size threshold
     C1ASKSIZE1 = "C1ASKSIZE1"  # The ask trading size threshold
     C2BIDSIZE1 = "C2BIDSIZE1"  # The bid trading size threshold
@@ -112,7 +113,9 @@ class DLGFlag(StrEnum):
 
 class AccountSubscriptionFields(StrEnum):
     DEPOSIT = "DEPOSIT"  # Account minimum deposit value required for margins
-    AVAILABLE_CASH = "AVAILABLE_CASH"  # Amount cash available to trade value, after account balance, profit and loss and minimum deposit amount have been considered
+    # Amount cash available to trade value, after account balance, profit and loss and minimum 
+    # deposit amount have been considered
+    AVAILABLE_CASH = "AVAILABLE_CASH"  
     PNL = "PNL"  # Profit/Loss
     PNL_LR = "PNL_LR"  # Profit/Loss Limited Risk
     PNL_NLR = "PNL_NLR"  # Profit/Loss Non-limited Risk
@@ -209,9 +212,11 @@ class MarketFields(StrEnum):
     LOW = "LOW"  # Intraday low price
     CHANGE = "CHANGE"  # Price change compared with open value
     CHANGE_PCT = "CHANGE_PCT"  # Price percent change compared with open value
-    UPDATE_TIME = "UPDATE_TIME"  # Publish time of last price update (UK local time, i.e. GMT or BST)
+    # Publish time of last price update (UK local time, i.e. GMT or BST)
+    UPDATE_TIME = "UPDATE_TIME"  
     MARKET_DELAY = "MARKET_DELAY"  # Delayed price (0=false, 1=true)
-    MARKET_STATE = "MARKET_STATE"  # Market status: CLOSED, OFFLINE, TRADEABLE, EDIT, AUCTION, AUCTION_NO_EDIT, SUSPENDED
+    # Market status: CLOSED, OFFLINE, TRADEABLE, EDIT, AUCTION, AUCTION_NO_EDIT, SUSPENDED
+    MARKET_STATE = "MARKET_STATE"  
     BID = "BID"  # Bid price
     OFFER = "OFFER"  # Offer price
     STRIKE_PRICE = "STRIKE_PRICE"  # Strike price (Sprint markets)

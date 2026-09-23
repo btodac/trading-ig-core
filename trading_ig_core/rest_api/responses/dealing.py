@@ -19,7 +19,7 @@ class DealConfirmation:
     epic: str  # Instrument epic identifier
     guaranteedStop: bool  # True if guaranteed stop
     trailingStop: bool  # True if trailing stop
-    reason: RejectionReasons  # Describes the error (or success) condition for the specified trading operation
+    reason: RejectionReasons  # Describes the error (or success) condition for the deal
     status: PositionStatus | None  # Position status
     size: float | None  # Size
     expiry: str | None  # Instrument expiry

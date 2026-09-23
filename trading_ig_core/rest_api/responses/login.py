@@ -42,7 +42,7 @@ class SessionCreateV1Response(Response):
     dealingEnabled: bool  # Whether the account is enabled for placing trading orders
     hasActiveDemoAccounts: bool  # Whether the Client has active demo accounts
     hasActiveLiveAccounts: bool  # Whether the Client has active live accounts
-    lightstreamerEndpoint: str  # Lightstreamer endpoint for subscribing to account and price updates
+    lightstreamerEndpoint: str  # Lightstreamer endpoint
     reroutingEnvironment: ReroutingEnvironment | None  # DEMO, LIVE, TEST, or UAT
     timezoneOffset: float  # Client account timezone offset relative to UTC, expressed in hours
     trailingStopsEnabled: bool  # Whether the account is allowed to set trailing stops on trades
@@ -61,9 +61,9 @@ class OAuthToken:
 class SessionCreateV3Response(Response):
     accountId: str  # Active account identifier
     clientId: str  # Client identifier
-    lightstreamerEndpoint: str  # Lightstreamer endpoint for subscribing to account and price updates
+    lightstreamerEndpoint: str  # Lightstreamer endpoint
     oauthToken: OAuthToken
-    timezoneOffset: float  # Timezone offset of the active account relative to UTC, expressed in hours
+    timezoneOffset: float  # Timezone offset of the active account relative to UTC (in hours)
 
 
 @dataclass

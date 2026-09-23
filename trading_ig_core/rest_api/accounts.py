@@ -62,9 +62,7 @@ class FetchAccountActivityByPeriod(RestApiCall):
         self.base_endpoint = "/history/activity"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
-        self.arguments = FetchAccountActivityByPeriodArguments(
-            milliseconds=milliseconds
-        )
+        self.arguments = FetchAccountActivityByPeriodArguments(milliseconds=milliseconds)
 
 
 @dataclass
@@ -205,4 +203,4 @@ class FetchAccountActivityByDate(RestApiCall):
         self.arguments = fetch_account_acitvity_by_date_arguments
 
     def process_payload(self, payload: dict[str, Any]):
-            return pd.DataFrame(payload["activities"])
+        return pd.DataFrame(payload["activities"])

@@ -173,7 +173,9 @@ class InstrumentDetails:
     marketId: str  # Market identifier
     name: str  # Name
     newsCode: str  # Reuters news code
-    streamingPricesAvailable: bool  # True if streaming prices are available, i.e. the market is open and the client has appropriate permissions
+    # True if streaming prices are available, i.e. the market is open and the client has 
+    # appropriate permissions
+    streamingPricesAvailable: bool  
     limitAllowed: bool  # True if streaming is allowed
     stopAllowed: bool  # True if stops is allowed
     unit: InstrumentUnit  # Unit used to qualify the size of a trade
@@ -215,7 +217,7 @@ class MarketSnapshot:
     marketStatus: MarketStatus
     netChange: float  # Net price change on the day
     percentageChange: float  # Percentage price change on the day
-    scalingFactor: float  # Multiplying factor to determine actual pip value for the levels used by the instrument
+    scalingFactor: float  # Multiplying factor to determine actual pip value for the instrument
     updateTimestampUTC: float  # Time (in seconds since 1970) of last price update
     priceLadder: list[PriceRung] 	
     currencyLadders: list[CurrencyRung]
