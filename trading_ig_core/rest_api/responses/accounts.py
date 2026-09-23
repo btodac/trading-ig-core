@@ -1,5 +1,6 @@
 from pydantic.dataclasses import dataclass
 
+from trading_ig_core.rest_api.base_rest_api_call import RestAPIResponse
 from trading_ig_core.rest_api.rest_api_enums import AccountStatus, AccountType
 
 
@@ -27,7 +28,7 @@ class Account:
 
 
 @dataclass
-class Accounts:
+class Accounts(RestAPIResponse):
     """Response from FetchAccounts"""
     accounts: list[Account]
 

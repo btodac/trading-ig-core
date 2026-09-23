@@ -1,11 +1,11 @@
 from pydantic.dataclasses import dataclass
 
-from trading_ig_core.rest_api.base_rest_api_call import Response
+from trading_ig_core.rest_api.base_rest_api_call import RestAPIResponse
 from trading_ig_core.rest_api.rest_api_enums import AccountType, ReroutingEnvironment
 
 
 @dataclass
-class SessionDetailsResponse(Response):
+class SessionDetailsResponse(RestAPIResponse):
     accountId: str  # Active account identifier
     clientId: str  # Client identifier
     currency: str  # Currency
@@ -31,7 +31,7 @@ class ClientAccount:
 
 
 @dataclass
-class SessionCreateV1Response(Response):
+class SessionCreateV1Response(RestAPIResponse):
     accountInfo: AccountInfo	
     accountType: AccountType
     accounts: list[ClientAccount]  # List of client accounts
@@ -58,7 +58,7 @@ class OAuthToken:
 
 
 @dataclass
-class SessionCreateV3Response(Response):
+class SessionCreateV3Response(RestAPIResponse):
     accountId: str  # Active account identifier
     clientId: str  # Client identifier
     lightstreamerEndpoint: str  # Lightstreamer endpoint
@@ -67,7 +67,7 @@ class SessionCreateV3Response(Response):
 
 
 @dataclass
-class SwitchAccountResponse(Response):
+class SwitchAccountResponse(RestAPIResponse):
     dealingEnabled: bool  # Whether the account is enabled for placing trading orders
     hasActiveDemoAccounts: bool  # Whether the Client has active demo accounts
     hasActiveLiveAccounts: bool  # Whether the Client has active live accounts
@@ -75,7 +75,7 @@ class SwitchAccountResponse(Response):
 
 
 @dataclass
-class GetEncryptionKeyResponse(Response):
+class GetEncryptionKeyResponse(RestAPIResponse):
     encryptionKey: str  # Encryption key in Base 64 format
     timeStamp: float  # Current timestamp in milliseconds since epoch
 

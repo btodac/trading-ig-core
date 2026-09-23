@@ -1,5 +1,6 @@
 from pydantic.dataclasses import dataclass
 
+from trading_ig_core.rest_api.base_rest_api_call import RestAPIResponse
 from trading_ig_core.rest_api.rest_api_enums import Direction, RejectionReasons
 from trading_ig_core.streaming_api.updates import (
     AffectedDealStatus,
@@ -9,7 +10,7 @@ from trading_ig_core.streaming_api.updates import (
 
 
 @dataclass
-class DealConfirmation:
+class DealConfirmation(RestAPIResponse):
     affectedDeals: list[AffectedDealStatus]
     date: str  # Transaction date
     dealId: str  # Deal identifier

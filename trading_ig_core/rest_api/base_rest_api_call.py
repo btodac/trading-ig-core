@@ -25,7 +25,7 @@ class RequestData(ABC):
         return json_data
 
 
-class Response(ABC):
+class RestAPIResponse(ABC):
     @abstractmethod
     def __init__(self, *args, **kwargs):
         pass
@@ -54,5 +54,5 @@ class RestApiCall(ABC):
         return self.request_data.to_json()
 
     @abstractmethod
-    def process_payload(self, payload: dict[str, Any]) -> Response:
+    def process_payload(self, payload: dict[str, Any]) -> RestAPIResponse:
         pass
