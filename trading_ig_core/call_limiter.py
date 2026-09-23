@@ -27,19 +27,21 @@ class RESTCallLimiter:
             for key, request_limit in _limits.items()
         }
 
-    def __call__(self,
-            rest_api_call: RestApiCall,
-            return_raw: bool,
-        ):
-            endpoint = rest_api_call.base_endpoint.split("/", 2)[1]
-            limit_type = _limit_map.get(endpoint, "non-trading")
-            limit_deque = self._call_times[limit_type]
-            self._wait(limit_deque)
-            return self._func(rest_api_call, return_raw)
+    def __call__(
+        self,
+        rest_api_call: RestApiCall,
+        return_raw: bool,
+    ):
+        endpoint = rest_api_call.base_endpoint.split("/", 2)[1]
+        limit_type = _limit_map.get(endpoint, "non-trading")
+        limit_deque = self._call_times[limit_type]
+        self._wait(limit_deque)
+        return self._func(rest_api_call, return_raw)
 
     def _wait(self, limit_deque: deque[dt.datetime]):
         new_dt = dt.datetime.now(tz=dt.UTC)
         if len(limit_deque) == limit_deque.maxlen:
-            time.sleep(new_dt - limit_deque.popleft())
+            time_to_wait = new_dt - limit_deque.popleft()
+            time.sleep(time_to_wait.total_seconds())
         limit_deque.append(new_dt)
 
