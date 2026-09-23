@@ -148,7 +148,7 @@ class SwitchAccountData(RequestData):
 
 
 class SwitchAccount(RestApiCall):
-    def __init__(self, account_id, default_account):
+    def __init__(self, account_id: str, default_account: str):
         self.base_endpoint = "/session"
         self.request_type = RequestType.PUT
         self.api_version = IGRestAPIVersion.ONE

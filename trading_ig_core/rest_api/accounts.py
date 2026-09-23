@@ -194,13 +194,13 @@ class FetchAccountActivityByDateArguments(Arguments):
 class FetchAccountActivityByDate(RestApiCall):
     def __init__(
         self,
-        fetch_account_acitvity_by_date_arguments: FetchAccountActivityByDateArguments,
+        from_date: datetime,
+        to_date: datetime,
     ):
         self.base_endpoint = "/history/activity"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
 
-        self.arguments = fetch_account_acitvity_by_date_arguments
-
+        self.arguments = FetchAccountActivityByDateArguments(fromDate=from_date, toDate=to_date)
     def process_payload(self, payload: dict[str, Any]):
         return pd.DataFrame(payload["activities"])
