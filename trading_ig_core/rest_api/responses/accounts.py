@@ -35,3 +35,6 @@ class Accounts(RestAPIResponse):
     @classmethod
     def from_response(cls, response: list[str]):
         return cls(response["accounts"])
+
+    def __getitem__(self, index):
+        return self.accounts[index]
