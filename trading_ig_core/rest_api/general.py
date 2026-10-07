@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from trading_ig_core.rest_api.base_rest_api_call import RequestData, RestApiCall
+from trading_ig_core.rest_api.responses.general import GetClientAppsResponse
 from trading_ig_core.rest_api.rest_api_enums import (
     ApplicationStatus,
     IGRestAPIVersion,
@@ -13,6 +14,9 @@ class GetClientApps(RestApiCall):
         self.base_endpoint = "/operations/application"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
+
+    def process_payload(self, payload):
+        return GetClientAppsResponse(payload)
 
 
 @dataclass

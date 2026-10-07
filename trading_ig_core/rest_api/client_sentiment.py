@@ -38,7 +38,7 @@ class FetchClientSentimentByInstruments(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
         self.arguments = FetchClientSentimentByInstrumentsArguments(
-            market_id=market_ids
+            market_ids=market_ids
         )
 
     def process_payload(self, payload):

@@ -4,11 +4,13 @@ from typing import Any
 
 import pandas as pd
 
-from trading_ig_core.rest_api import (
-    Accounts,
+from trading_ig_core.rest_api.rest_api_enums import (
     IGRestAPIVersion,
     RequestType,
     TransactionType,
+)
+from trading_ig_core.rest_api.responses.accounts import (
+    Accounts,
 )
 from trading_ig_core.rest_api.base_rest_api_call import (
     Arguments,
@@ -32,6 +34,9 @@ class FetchAccountPreferences(RestApiCall):
         self.base_endpoint = "/accounts/preferences"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
+
+    def process_payload(self, payload: dict) -> bool:
+        return payload["trailingStopsEnabled"]
 
 
 @dataclass
@@ -201,6 +206,9 @@ class FetchAccountActivityByDate(RestApiCall):
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
 
-        self.arguments = FetchAccountActivityByDateArguments(fromDate=from_date, toDate=to_date)
+        self.arguments = FetchAccountActivityByDateArguments(
+            fromDate=from_date, toDate=to_date
+        )
+
     def process_payload(self, payload: dict[str, Any]):
         return pd.DataFrame(payload["activities"])

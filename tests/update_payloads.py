@@ -7,42 +7,31 @@ from trading_ig_core.rest_api.base_rest_api_call import RestApiCall
 
 DEFAULT_OUTPUT_DIR = Path(__file__).parent / "payloads" / "rest"
 
-EPIC = "IX.D.NASDAQ.IFS.IP"
+NDX_EPIC = "IX.D.NASDAQ.IFS.IP"
+GDAXI_EPIC = "IX.D.DAX.IFS.IP"
 
 REQUESTS: list[RestApiCall] = [
-    rest_api.FetchAccounts(),
-    rest_api.FetchAccountActivityByDate(
-        rest_api.FetchAccountActivityByDateArguments(
-            fromDate=dt.datetime(year=2026, month=1, day=1, tzinfo=dt.UTC),
-            toDate=dt.datetime.now(tz=dt.UTC),
-        ),
-    ),
-    rest_api.CloseOpenPosition(
-        rest_api.CloseOpenPositionData(
-            dealId=position.dealId,
-            direction="SELL",
-            size=1,
-        )
-    ),
-    rest_api.FetchDealByDealReference(deal_reference='S'),
-    ,
-    
-
+	rest_api.FetchAccounts(),
+	rest_api.FetchAccountPreferences(),
+	rest_api.FetchAccountActivityByDate(
+		from_date=dt.datetime(year=2026, month=1, day=1, tzinfo=dt.UTC),
+		to_date=dt.datetime.now(tz=dt.UTC),
+	),
+	rest_api.GetClientApps(),
+	rest_api.FetchClientSentimentByInstruments(market_ids=[NDX_EPIC, GDAXI_EPIC]),
+	rest_api.FetchClientSentimentByInstrument(market_id=NDX_EPIC),
+	rest_api.FetchRelatedClientSentimentByInstrument(market_id=NDX_EPIC),
+	rest_api.GetMarketCategories(),
+	rest_api.GetMarketDetails(epic=NDX_EPIC),
+	rest_api.GetMarketDetailsV2(epic=NDX_EPIC),
+	rest_api.GetMarketDetailsV3(epic=NDX_EPIC),
+	rest_api.GetMarketDetailsV4(epic=NDX_EPIC),
+	rest_api.FetchMarketsByEpics(epics=f"{NDX_EPIC},{GDAXI_EPIC}"),
+	rest_api.FetchRepeatDealingWindowData(epic=NDX_EPIC),
 ]
-
-def _request_and_write_json(session: IGSession, request: RestApiCall):
-    payload = session.request(request, return_raw=True)
-    write_payload_to_JSON(request.__class__, payload)
-    return request.process_payload(payload)
-
-
-def get_market_details(session: IGSession, epic: str) -> rest_api.MarketDetailsV4:
-    return session.request(rest_api.GetMarketDetailsV4(epic))
-
-
 def _trading_payloads(session: IGSession):
-    details_call = rest_api.GetMarketDetailsV4(EPIC)
-    details: rest_api.MarketDetailsV4 = _request_and_write_json(session, details_call)
+    details_call = rest_api.GetMarketDetailsV4(NDX_EPIC)
+    details: rest_api.MarketDetailsV4 = capture_rest_payload(session, details_call)
     open_position_call = rest_api.CreateOpenPosition(
         rest_api.CreateOpenPositionData(
             currencyCode=details.instrument.currencies[0].code,
@@ -58,10 +47,10 @@ def _trading_payloads(session: IGSession):
             trailingStopIncrement=None,
         )
     )
-    deal_reference: str = _request_and_write_json(session, open_position_call)
+    deal_reference: str = capture_rest_payload(session, open_position_call)
 
     confirmation_call = rest_api.FetchDealByDealReference(deal_reference)
-    confirmation: rest_api.DealConfirmation = _request_and_write_json(session, confirmation_call)
+    confirmation: rest_api.DealConfirmation = capture_rest_payload(session, confirmation_call)
 
     close_position_call = rest_api.CloseOpenPosition(
         rest_api.CloseOpenPositionData(
@@ -70,17 +59,7 @@ def _trading_payloads(session: IGSession):
             size=confirmation.size,
         )
     )
-    deal_reference = _request_and_write_json(session, close_position_call)
-
-
-
-def write_payload_to_JSON(request_name: str, payload: dict):
-    DEFAULT_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    output_path = DEFAULT_OUTPUT_DIR / f"{request_name}.json"
-    with output_path.open("w", encoding="utf-8") as payload_file:
-            json.dump(payload, payload_file, indent=2, sort_keys=True)
-            payload_file.write("\n")
-
+    deal_reference = capture_rest_payload(session, close_position_call)
 
 def capture_rest_payloads(
     session: IGSession,
@@ -90,16 +69,27 @@ def capture_rest_payloads(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for request in REQUESTS:
-        payload = session.request(request, return_raw=True)
-        output_path = output_dir / f"{request.__class__}.json"
-        with output_path.open("w", encoding="utf-8") as payload_file:
-            json.dump(payload, payload_file, indent=2, sort_keys=True)
-            payload_file.write("\n")
+        capture_rest_payload(session, request, output_dir)
+
+
+def capture_rest_payload(
+	session: IGSession,
+	request: RestApiCall,
+	output_dir: Path = DEFAULT_OUTPUT_DIR,
+) -> list[Path]:
+	"""Write one raw REST API response JSON file for each endpoint factory."""
+	output_dir.mkdir(parents=True, exist_ok=True)
+	payload = session.request(request, return_raw=True)
+	output_path = output_dir / f"{request.__class__.__name__}.json"
+	with output_path.open("w", encoding="utf-8") as payload_file:
+		json.dump(payload, payload_file, indent=2, sort_keys=True)
+		payload_file.write("\n")
+	return request.process_payload(payload)
 
         
 def main(account_details: IGAccountDetails):
-    session = IGSession(account_details)
-    capture_rest_payloads(session)
+	session = IGSession(account_details)
+	capture_rest_payload(session, REQUESTS[0])
 
 
 if __name__ == "__main__":

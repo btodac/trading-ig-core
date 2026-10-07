@@ -201,6 +201,7 @@ class IGSession:
 
         if response.status_code == 200:
             payload = self.parse_response(response)
+            logger.debug(str(payload))
             if return_raw:
                 return payload
             return rest_api_call.process_payload(payload)

@@ -1,0 +1,38 @@
+{
+  "accounts": [
+    {
+      "accountAlias": null,
+      "accountId": "Z4VPDG",
+      "accountName": "Options",
+      "accountType": "CFD",
+      "balance": {
+        "available": 9377.92,
+        "balance": 9377.92,
+        "deposit": 0.0,
+        "profitLoss": 0.0
+      },
+      "canTransferFrom": true,
+      "canTransferTo": true,
+      "currency": "EUR",
+      "preferred": false,
+      "status": "ENABLED"
+    },
+    {
+      "accountAlias": null,
+      "accountId": "Z4VPDH",
+      "accountName": "CFD",
+      "accountType": "CFD",
+      "balance": {
+        "available": 8968.4,
+        "balance": 8968.4,
+        "deposit": 0.0,
+        "profitLoss": 0.0
+      },
+      "canTransferFrom": true,
+      "canTransferTo": true,
+      "currency": "EUR",
+      "preferred": true,
+      "status": "ENABLED"
+    }
+  ]
+}

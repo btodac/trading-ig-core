@@ -8,6 +8,7 @@ from trading_ig_core.rest_api.base_rest_api_call import (
     RequestData,
     RestApiCall,
 )
+from trading_ig_core.rest_api.responses.markets import GetMarketCategoriesResponse
 from trading_ig_core.rest_api.rest_api_enums import (
     IGRestAPIVersion,
     MarketFilter,
@@ -15,11 +16,14 @@ from trading_ig_core.rest_api.rest_api_enums import (
 )
 
 
-class FetchTopLevelNavigationNodes(RestApiCall):
+class GetMarketCategories(RestApiCall):
     def __init__(self):
-        self.base_endpoint = "/marketnavigation"
+        self.base_endpoint = "/categories"
         self.request_type = RequestType.GET
         self.api_version = IGRestAPIVersion.ONE
+
+    def process_payload(self, payload):
+        return GetMarketCategoriesResponse(payload)
 
 
 @dataclass

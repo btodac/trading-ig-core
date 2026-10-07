@@ -1,6 +1,6 @@
 from pydantic.dataclasses import dataclass
 
-from trading_ig_core.rest_api import Direction, OrderType
+from trading_ig_core.rest_api.rest_api_enums import Direction, OrderType
 from trading_ig_core.streaming_api.streaming_enums import (
     DealStatus,
     OpenPositionStatus,
